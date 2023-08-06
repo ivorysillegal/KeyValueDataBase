@@ -158,15 +158,9 @@ public class DataBaseServer {
                 try {
                     //        遍历数组里面的指令 看一下是否有正确的指令
                     switch (i) {
-                        case 0:
-                            ExecuteOptions(parameterValues, command, "command.StringOptions");
-                            break;
-                        case 1:
-                            ExecuteOptions(parameterValues, command, "command.LinkedListOptions");
-                            break;
-                        case 2:
-                            ExecuteOptions(parameterValues, command, "command.HashOptions");
-                            break;
+                        case 0 -> flag = ExecuteOptions(parameterValues, command, "command.StringCommand");
+                        case 1 -> flag = ExecuteOptions(parameterValues, command, "command.LinkedListCommand");
+                        case 2 -> flag = ExecuteOptions(parameterValues, command, "command.HashCommand");
                     }
                 } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
                     e.printStackTrace();
@@ -181,15 +175,18 @@ public class DataBaseServer {
     }
 
 
-    //    TBD
-    private static void ExecuteOptions(String[] parameterValues, String command, String className) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    //    通过反射执行方法
+    private static boolean ExecuteOptions(String[] parameterValues, String command, String className) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         Class clazz = Class.forName(className);
         Constructor constructor = clazz.getConstructor();
         Object o = constructor.newInstance();
         Method method = clazz.getDeclaredMethod(command);
+        if (method.getParameterCount() != parameterValues.length) {
+            return false;
+        }
         method.setAccessible(true);
         method.invoke(o, (Object) parameterValues);
-
+        return true;
     }
 
 }
