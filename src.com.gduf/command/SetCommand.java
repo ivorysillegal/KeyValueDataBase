@@ -8,7 +8,7 @@ import java.util.Iterator;
 public class SetCommand {
     public static HashMap<String, HashSet<String>> SET_DATA;
 
-    public static void sadd(String key, String... values) throws ClassNotFoundException {
+    public static void sadd(String key, String... values) {
         HashSet<String> set = SET_DATA.get(key);
         set.addAll(Arrays.asList(values));
         SET_DATA.put(key, set);

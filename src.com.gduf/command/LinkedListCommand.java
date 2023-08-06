@@ -94,8 +94,4 @@ public class LinkedListCommand {
         System.out.println("1");
     }
 
-
-
-
-
 }
