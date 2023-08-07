@@ -1,5 +1,7 @@
 package client;
 
+import command.IOCommand;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -12,6 +14,14 @@ public class DataBaseClient {
 
     //    启动客户端的方法
     public void startClient() {
+
+//        程序强制退出或者正常退出时保存数据（利用钩子机制）
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // 在这里执行你希望在程序退出前保存数据的操作
+//            IOCommand.save();
+            System.out.println("程序即将退出，保存数据并进行清理操作。");
+        }));
+
 //        连接服务器端
         SocketChannel socketChannel = null;
         Selector selector = null;
@@ -26,9 +36,10 @@ public class DataBaseClient {
             e.printStackTrace();
         }
 
-//        创建线程
+//        创建线程  用于接收服务器返回的信息
         new Thread(new ClientThread(selector)).start();
 
+//        主线程下面的内容用于发信息给客户端
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();

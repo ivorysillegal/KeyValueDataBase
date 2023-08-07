@@ -1,12 +1,29 @@
 package command;
 
 import javax.net.ssl.SSLContext;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 public class LinkedListCommand {
     public static HashMap<String, LinkedList<String>> LINKED_LIST_DATA;
+    private static final String LINKED_LIST_DATA_PATH = "src.com.gduf\\data\\key_value_data\\LinkedListData.properties";
+
+    public LinkedListCommand() {
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(LINKED_LIST_DATA_PATH));
+            LINKED_LIST_DATA = (HashMap<String, LinkedList<String>>) objectInputStream.readObject();
+            if (LINKED_LIST_DATA == null) {
+                LINKED_LIST_DATA = new HashMap<>();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("加载双向链表类型配置文件时出错");
+            e.printStackTrace();
+        }
+    }
 
     public static void lpush(String key, String input) {
         LinkedList<String> value = LINKED_LIST_DATA.get(key);

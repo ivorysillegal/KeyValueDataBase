@@ -1,6 +1,8 @@
 package server;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,23 +10,34 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DataBaseServer {
 
     private static HashMap<String, String>[] METHODS;
+    private static final String METHODS_PATH = "src.com.gduf\\data\\TypeData.properties";
+    private static final int PORT = 8080;
 //    这个HashMap存储指令和对应方法的映射 目前思路是 服务器激活时通过配置文件读取数据   TBD
 //    更新思路 创立一个hashmap的数组 数组的每一项代表一个数据类型的指令及其映射
 
     public static void main(String[] args) throws IOException {
+
+//        初始化 加载配置文件
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(METHODS_PATH));
+        try {
+            METHODS = (HashMap<String, String>[]) objectInputStream.readObject();
+//            System.out.println(Arrays.toString(Arrays.stream(METHODS).toArray()));
+        } catch (ClassNotFoundException e) {
+            System.out.println("读取配置文件时出错");
+            e.printStackTrace();
+        }
+
+
         Selector selector = Selector.open();
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress(8080));
+        serverSocketChannel.bind(new InetSocketAddress(PORT));
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("服务器启动成功");

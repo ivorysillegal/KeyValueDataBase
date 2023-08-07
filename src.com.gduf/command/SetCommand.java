@@ -1,12 +1,26 @@
 package command;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.*;
 
 public class SetCommand {
     public static HashMap<String, HashSet<String>> SET_DATA;
+    private static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
+
+    public SetCommand() {
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(SET_DATA_PATH));
+            SET_DATA = (HashMap<String, HashSet<String>>) objectInputStream.readObject();
+            if (SET_DATA == null) {
+                SET_DATA = new HashMap<>();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("加载集合类型配置文件时出错");
+            e.printStackTrace();
+        }
+    }
 
     public static void sadd(String key, String... values) {
         HashSet<String> set = SET_DATA.get(key);

@@ -3,7 +3,7 @@ package file;
 import java.io.*;
 import java.util.HashMap;
 
-public class LogCommandToFile {
+public class LogToFile {
     public static void main(String[] args) throws IOException {
 
         HashMap<String, String> hashMap = new HashMap<>();
@@ -32,10 +32,18 @@ public class LogCommandToFile {
         hashMap3.put("sismember", "sismember");
         hashMap3.put("srem", "srem");
 
-//        write("src.com.gduf\\data\\StringData.properties", hashMap);
-        write("src.com.gduf\\data\\LinkedListData.properties", hashMap1);
-        write("src.com.gduf\\data\\HashData.properties", hashMap2);
-        write("src.com.gduf\\data\\SetData.properties", hashMap3);
+//        write("src.com.gduf\\data\\command_data\\StringCommand.properties", hashMap);
+//        write("src.com.gduf\\data\\command_data\\LinkedListCommand.properties", hashMap1);
+//        write("src.com.gduf\\data\\command_data\\HashCommand.properties", hashMap2);
+//        write("src.com.gduf\\data\\command_data\\SetCommand.properties", hashMap3);
+
+    HashMap<String,String>[] hashMaps = new HashMap[4];
+    hashMaps[0] = hashMap;
+    hashMaps[1] = hashMap1;
+    hashMaps[2] = hashMap2;
+    hashMaps[3] = hashMap3;
+    write("src.com.gduf\\data\\TypeData.properties",hashMaps);
+
     }
 
     public static void write(String filePath, HashMap<String, String> hashMap) throws IOException {
@@ -43,6 +51,14 @@ public class LogCommandToFile {
         ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
         outputStream.writeObject(hashMap);
     }
+
+    public static void write(String filePath, HashMap<String, String>[] hashMap) throws IOException {
+        OutputStream fileOutputStream = new FileOutputStream(filePath);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        outputStream.writeObject(hashMap);
+    }
+
+
 
 
 }
