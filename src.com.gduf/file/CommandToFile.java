@@ -3,7 +3,7 @@ package file;
 import java.io.*;
 import java.util.HashMap;
 
-public class LogToFile {
+public class CommandToFile {
     public static void main(String[] args) throws IOException {
 
         HashMap<String, String> hashMap = new HashMap<>();

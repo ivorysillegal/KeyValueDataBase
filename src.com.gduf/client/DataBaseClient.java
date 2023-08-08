@@ -39,7 +39,7 @@ public class DataBaseClient {
 //        创建线程  用于接收服务器返回的信息
         new Thread(new ClientThread(selector)).start();
 
-//        主线程下面的内容用于发信息给客户端
+//        主线程下面的内容用于发信息给服务器
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();
