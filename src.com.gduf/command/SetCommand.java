@@ -7,7 +7,7 @@ import java.util.*;
 
 public class SetCommand {
     public static HashMap<String, HashSet<String>> SET_DATA;
-    private static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
+    public static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
 
     public SetCommand() {
         try {

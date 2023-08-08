@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class HashCommand {
     public static HashMap<String, HashMap<String, String>> HASH_DATA;
-    private static final String HASH_DATA_PATH = "src.com.gduf\\data\\key_value_data\\HashData.properties";
+    public static final String HASH_DATA_PATH = "src.com.gduf\\data\\key_value_data\\HashData.properties";
 
     public HashCommand() {
         try {

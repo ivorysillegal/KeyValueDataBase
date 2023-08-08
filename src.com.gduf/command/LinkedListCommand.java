@@ -10,7 +10,7 @@ import java.util.ListIterator;
 
 public class LinkedListCommand {
     public static HashMap<String, LinkedList<String>> LINKED_LIST_DATA;
-    private static final String LINKED_LIST_DATA_PATH = "src.com.gduf\\data\\key_value_data\\LinkedListData.properties";
+    public static final String LINKED_LIST_DATA_PATH = "src.com.gduf\\data\\key_value_data\\LinkedListData.properties";
 
     public LinkedListCommand() {
         try {

@@ -10,6 +10,7 @@ public class CommandToFile {
         HashMap<String, String> hashMap1 = new HashMap<>();
         HashMap<String, String> hashMap2 = new HashMap<>();
         HashMap<String, String> hashMap3 = new HashMap<>();
+        HashMap<String, String> hashMap4 = new HashMap<>();
 
         hashMap.put("set", "set");
         hashMap.put("get", "get");
@@ -31,6 +32,8 @@ public class CommandToFile {
         hashMap3.put("smembers", "smembers");
         hashMap3.put("sismember", "sismember");
         hashMap3.put("srem", "srem");
+
+//        hashMap4.put()
 
 //        write("src.com.gduf\\data\\command_data\\StringCommand.properties", hashMap);
 //        write("src.com.gduf\\data\\command_data\\LinkedListCommand.properties", hashMap1);

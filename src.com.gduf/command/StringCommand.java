@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class StringCommand {
 
     public static HashMap<String, String> STRING_DATA;
-    private static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
+    public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
 
     public StringCommand() {
         try {

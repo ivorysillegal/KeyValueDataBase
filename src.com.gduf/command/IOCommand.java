@@ -108,6 +108,16 @@ public class IOCommand {
 //            return hashMap;
 //    }
 
+    public static <V> HashMap<String, V> load(String path, HashMap<String, V> hashMap) throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(path));
+        hashMap = (HashMap<String, V>) objectInputStream.readObject();
+        if (hashMap == null) {
+            hashMap = new HashMap<>();
+        }
+        return hashMap;
+    }
+
+
     //    加载（初始化数据）
     public static <T, U> HashMap<T, U> loadData(String pathStr, Class<HashMap<T, U>> dataType) {
         HashMap<T, U> hashMap = null;
