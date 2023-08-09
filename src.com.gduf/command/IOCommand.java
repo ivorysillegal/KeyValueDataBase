@@ -117,19 +117,53 @@ public class IOCommand {
         return hashMap;
     }
 
-
-    //    加载（初始化数据）
-    public static <T, U> HashMap<T, U> loadData(String pathStr, Class<HashMap<T, U>> dataType) {
+    public static <T, U> HashMap<T, U> loadData(String path, Class<HashMap<T, U>> dataType) {
         HashMap<T, U> hashMap = null;
-        try (
-                ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(pathStr))
-        ) {
-            hashMap = dataType.cast(objectIn.readObject());
+        try (ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(path))) {
+            Object loadedData = objectIn.readObject();
+            if (dataType.isInstance(loadedData)) {
+                hashMap = dataType.cast(loadedData);
+            } else {
+                System.err.println("类型分配错误");
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        if (hashMap == null) {
+            hashMap = new HashMap<>();
+        }
         return hashMap;
     }
+
+
+    public static HashMap<String, String>[] loadData(String path) {
+        HashMap<String, String>[] hashMaps = null;
+        ObjectInputStream objectIn = null;
+        try {
+            objectIn = new ObjectInputStream(new FileInputStream(path));
+            hashMaps = (HashMap<String, String>[]) objectIn.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (hashMaps == null) {
+            hashMaps = new HashMap[4];
+        }
+        return hashMaps;
+    }
+
+
+//    //    加载（初始化数据）
+//    public static <T, U> HashMap<T, U> loadData(String pathStr, Class<HashMap<T, U>> dataType) {
+//        HashMap<T, U> hashMap = null;
+//        try (
+//                ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(pathStr))
+//        ) {
+//            hashMap = dataType.cast(objectIn.readObject());
+//        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return hashMap;
+//    }
 
     //    保存数据(底层 持久化一中数据类型进入文件中)
     private static void saveFile(String pathStr, HashMap<?, ?> hashMap) {
@@ -197,7 +231,7 @@ public class IOCommand {
         }
     }
 
-//    删除指令
+    //    删除指令
     public static void flushdb() {
         try {
             del();
@@ -208,7 +242,7 @@ public class IOCommand {
 
     public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
         for (int i = 0; i < dataPath.size(); i++) {
-            if (isSameHashMapType(hashMap, hashMapArray.get(i))){
+            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
                 try {
                     delFile(dataPath.get(i));
                 } catch (IOException e) {

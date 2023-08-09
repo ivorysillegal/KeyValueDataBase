@@ -5,21 +5,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
 
-public class HashCommand {
-    public static HashMap<String, HashMap<String, String>> HASH_DATA;
-    public static final String HASH_DATA_PATH = "src.com.gduf\\data\\key_value_data\\HashData.properties";
+import static server.DataBaseServer.HASH_DATA;
 
+public class HashCommand {
     public HashCommand() {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(HASH_DATA_PATH));
-            HASH_DATA = (HashMap<String, HashMap<String, String>>) objectInputStream.readObject();
-            if (HASH_DATA == null) {
-                HASH_DATA = new HashMap<>();
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("加载哈希类型配置文件时出错");
-            e.printStackTrace();
-        }
+
     }
 
     public static void hset(String key, String field, String value) {

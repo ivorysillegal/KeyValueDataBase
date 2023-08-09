@@ -1,5 +1,7 @@
 package server;
 
+import command.IOCommand;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +16,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static command.IOCommand.*;
+
 public class DataBaseServer {
 
     private static HashMap<String, String>[] METHODS;
@@ -25,6 +29,14 @@ public class DataBaseServer {
     private static final String LINKED_LIST_CLASSNAME = "command.LinkedListCommand";
     private static final String HASH_CLASSNAME = "command.HashCommand";
     private static final String SET_CLASSNAME = "command.SetCommand";
+    public static HashMap<String, HashMap<String, String>> HASH_DATA;
+    public static final String HASH_DATA_PATH = "src.com.gduf\\data\\key_value_data\\HashData.properties";
+    public static HashMap<String, LinkedList<String>> LINKED_LIST_DATA;
+    public static final String LINKED_LIST_DATA_PATH = "src.com.gduf\\data\\key_value_data\\LinkedListData.properties";
+    public static HashMap<String, HashSet<String>> SET_DATA;
+    public static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
+    public static HashMap<String, String> STRING_DATA;
+    public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
 
 
     public static void main(String[] args) throws IOException {
@@ -38,6 +50,12 @@ public class DataBaseServer {
             System.out.println("读取配置文件时出错");
             e.printStackTrace();
         }
+
+        METHODS = loadData(METHODS_PATH);
+        STRING_DATA = loadData(STRING_DATA_PATH, (Class<HashMap<String, String>>) (Class<?>) HashMap.class);
+        LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
+        HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
+        SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
 
 //        启动服务器 注册通道 等待连接
         Selector selector = Selector.open();

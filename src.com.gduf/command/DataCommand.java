@@ -13,17 +13,8 @@ import static command.IOCommand.load;
 public class DataCommand {
 
     public DataCommand() {
-        try {
-            HashMap<String, HashMap<String, String>> hashHashMap = load(HashCommand.HASH_DATA_PATH, HashCommand.HASH_DATA);
-            HashMap<String, HashSet<String>> SetHashMap = load(SetCommand.SET_DATA_PATH, SetCommand.SET_DATA);
-            HashMap<String, LinkedList<String>> linkedListHashMap = load(LinkedListCommand.LINKED_LIST_DATA_PATH, LinkedListCommand.LINKED_LIST_DATA);
-            HashMap<String, String> stringHashMap = load(StringCommand.STRING_DATA_PATH, StringCommand.STRING_DATA);
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("加载配置文件时出错");
-            e.printStackTrace();
-        }
-    }
 
+    }
 
     //    传进来想要设置过期时间的键值对
     public static <V> void expired(String key, String delay) {

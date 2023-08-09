@@ -5,22 +5,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
 
+import static server.DataBaseServer.STRING_DATA;
+
 public class StringCommand {
 
-    public static HashMap<String, String> STRING_DATA;
-    public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
-
     public StringCommand() {
-        try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(STRING_DATA_PATH));
-            STRING_DATA = (HashMap<String, String>) objectInputStream.readObject();
-            if (STRING_DATA == null) {
-                STRING_DATA = new HashMap<>();
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("加载集合类型配置文件时出错");
-            e.printStackTrace();
-        }
+
     }
 
     public static void set(String key, String value) {
