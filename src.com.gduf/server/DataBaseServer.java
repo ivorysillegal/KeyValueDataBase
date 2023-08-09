@@ -41,7 +41,8 @@ public class DataBaseServer {
     public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
     public static final String TYPE_PATH = "src.com.gduf\\data\\TypeData.properties";
     public static HashMap<String, String> DATA_PATH;
-
+    public static final String IO_CLASSNAME = "command.IOCommand";
+    public static final String DATA_CLASSNAME = "command.DataCommand";
 
     public static void main(String[] args) throws IOException {
 
@@ -224,6 +225,8 @@ public class DataBaseServer {
                     case 1 -> execute = Execute(parameterValues, command, LINKED_LIST_CLASSNAME);
                     case 2 -> execute = Execute(parameterValues, command, HASH_CLASSNAME);
                     case 3 -> execute = Execute(parameterValues, command, SET_CLASSNAME);
+                    case 4 -> execute = Execute(parameterValues, command, IO_CLASSNAME);
+                    case 5 -> execute = Execute(parameterValues, command, DATA_CLASSNAME);
                 }
             } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
