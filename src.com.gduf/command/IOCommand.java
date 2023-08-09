@@ -6,117 +6,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static server.DataBaseServer.*;
+
 //目前思路：
 //创建一个集合 存放配置文件的路径
 //在创建一个hashmap的集合 用于和集合一一对应 存放相应类型的hashmap数据进入文件中
 
 public class IOCommand {
     private static boolean saving = false;
-    public static ArrayList<String> dataPath;
-//    public static void loadStringData(String pathStr) throws IOException {
-//        Path path = Paths.get(pathStr);
-//        AsynchronousFileChannel asynchronousFileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.READ);
-//        ByteBuffer buffer = ByteBuffer.allocate(1024);
-//        asynchronousFileChannel.read(buffer, 0, buffer, new CompletionHandler<Integer, ByteBuffer>() {
-//            @Override
-//            public void completed(Integer result, ByteBuffer buffer) {
-//
-//                buffer.flip();
-//                byte[] data = new byte[buffer.limit()];
-//                buffer.get(data);
-//                try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-//                     ObjectInputStream ois = new ObjectInputStream(bis)) {
-//                    HashMap<String, String> hashMap = (HashMap<String, String>) ois.readObject();
-//                    // 现在你可以在这里使用读取到的HashMap对象
-//                    System.out.println(hashMap);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            @Override
-//            public void failed(Throwable exc, ByteBuffer attachment) {
-//                System.out.println("写入文件错误");
-//            }
-//        });
-//    }
 
-//    public static <T> T loadData(String pathStr,Class<T> dataType) throws IOException {
-//        Path path = Paths.get(pathStr);
-//        AsynchronousFileChannel asynchronousFileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.READ);
-//        ByteBuffer buffer = ByteBuffer.allocate(1024);
-//        asynchronousFileChannel.read(buffer, 0, buffer, new CompletionHandler<Integer, ByteBuffer>() {
-//            @Override
-//            public void completed(Integer result, ByteBuffer buffer) {
-//                buffer.flip();
-//                byte[] data = new byte[buffer.limit()];
-//                buffer.get(data);
-//                try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-//                     ObjectInputStream ois = new ObjectInputStream(bis)) {
-//
-//                    // Deserialize the data using ObjectInputStream
-//                    T loadedData = (T) ois.readObject();
-//                    return loadedData;
-//                    // Now you can use the loadedData object
-//                    System.out.println(loadedData);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void failed(Throwable exc, ByteBuffer attachment) {
-//                System.out.println("读取文件错误");
-//            }
-//        });
-//    }
-
-
-//    public static void loadData(String pathStr, Class dataType) throws IOException {
-//        RandomAccessFile dataFile = new RandomAccessFile(pathStr, "rw");
-//        FileChannel channel = dataFile.getChannel();
-//        ByteBuffer buf = ByteBuffer.allocate(1024);
-//        int bytesRead = channel.read(buf);
-////        这里返回值是读取的字节的大小
-//        while (bytesRead != -1) {
-//            System.out.println("读取了" + bytesRead);
-//            buf.flip();
-////            反转读写模式 从 将数据写入缓冲区 变为 从缓冲区读取数据
-//            dataType.getName();
-//
-//            while (buf.hasRemaining()) {
-//                System.out.println((char) buf.get());
-//            }
-//            buf.clear();
-////            clear()切换回写入模式
-//            bytesRead = channel.read(buf);
-//        }
-//
-//        dataFile.close();
-//        System.out.println("结束");
-//
-//    }
-
-
-//    public static <T,U> HashMap<T,U> loadData(String pathStr, Class dataType) throws IOException {
-//            HashMap<T, U> hashMap = null;
-//            try (FileInputStream fileIn = new FileInputStream(pathStr);
-//                 ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-//                hashMap = (HashMap<T,U>) objectIn.readObject();
-//            } catch (IOException | ClassNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            return hashMap;
-//    }
-
-    public static <V> HashMap<String, V> load(String path, HashMap<String, V> hashMap) throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(path));
-        hashMap = (HashMap<String, V>) objectInputStream.readObject();
-        if (hashMap == null) {
-            hashMap = new HashMap<>();
-        }
-        return hashMap;
-    }
-
+    //    面向4种数据类型的加载方法
     public static <T, U> HashMap<T, U> loadData(String path, Class<HashMap<T, U>> dataType) {
         HashMap<T, U> hashMap = null;
         try (ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(path))) {
@@ -136,7 +35,8 @@ public class IOCommand {
     }
 
 
-    public static HashMap<String, String>[] loadData(String path) {
+    //    专门面向METHODS数组
+    public static HashMap<String, String>[] loadData(String path, int type) {
         HashMap<String, String>[] hashMaps = null;
         ObjectInputStream objectIn = null;
         try {
@@ -146,29 +46,33 @@ public class IOCommand {
             e.printStackTrace();
         }
         if (hashMaps == null) {
-            hashMaps = new HashMap[4];
+            hashMaps = new HashMap[type];
         }
         return hashMaps;
     }
 
 
-//    //    加载（初始化数据）
-//    public static <T, U> HashMap<T, U> loadData(String pathStr, Class<HashMap<T, U>> dataType) {
-//        HashMap<T, U> hashMap = null;
-//        try (
-//                ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(pathStr))
-//        ) {
-//            hashMap = dataType.cast(objectIn.readObject());
-//        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return hashMap;
-//    }
+    //    面向类型数据文件（TYPE_PATH）
+    public static ArrayList<HashMap<?, ?>> loadData(String path) {
+        ArrayList<HashMap<?, ?>> hashMaps = null;
+        ObjectInputStream objectIn = null;
+        try {
+            objectIn = new ObjectInputStream(new FileInputStream(path));
+            hashMaps = (ArrayList<HashMap<?, ?>>) objectIn.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (hashMaps == null) {
+            hashMaps = new ArrayList<>();
+        }
+        return hashMaps;
+    }
+
 
     //    保存数据(底层 持久化一中数据类型进入文件中)
     private static void saveFile(String pathStr, HashMap<?, ?> hashMap) {
         try (
-                ObjectOutputStream objectOut = new ObjectOutputStream(new FileOutputStream(pathStr))
+                ObjectOutputStream objectOut = new ObjectOutputStream(new FileOutputStream(pathStr, true))
 //                在try-with-resources的情况下 用完会自动关流
         ) {
             objectOut.writeObject(hashMap);
@@ -179,22 +83,27 @@ public class IOCommand {
 
 
     private static void saveData(ArrayList<HashMap<?, ?>> hashMapArray) {
-        for (int i = 0; i < dataPath.size(); i++) {
-            saveFile(dataPath.get(i), hashMapArray.get(i));
+        for (int i = 0; i < DATA_PATH.size(); i++) {
+            saveFile(DATA_PATH.get(i), hashMapArray.get(i));
         }
 //        利用for循环依次将所有文件写入
     }
 
 
     //            保存指令
-    public static void save(ArrayList<HashMap<?, ?>> hashMapArrayList) {
-        saveData(hashMapArrayList);
+    public static void save() {
+        ArrayList<HashMap<?, ?>> hashMapArray = new ArrayList<>();
+        hashMapArray.add(STRING_DATA);
+        hashMapArray.add(LINKED_LIST_DATA);
+        hashMapArray.add(SET_DATA);
+        hashMapArray.add(HASH_DATA);
+        saveData(hashMapArray);
         System.out.println("1");
     }
 
 
     //    后台保存指令
-    public static void bgsave(ArrayList<HashMap<?, ?>> hashMapArray) {
+    public static void bgsave() {
         if (saving) {
             System.out.println("Another bgsave is already in progress.");
             return;
@@ -208,7 +117,7 @@ public class IOCommand {
 //        Lambda表达式
         new Thread(() -> {
             try {
-                saveData(hashMapArray);
+                save();
             } finally {
                 saving = false;
             }
@@ -226,8 +135,8 @@ public class IOCommand {
 
     private static void del() throws IOException {
 //        利用for循环依次将所有文件清空
-        for (int i = 0; i < dataPath.size(); i++) {
-            delFile(dataPath.get(i));
+        for (int i = 0; i < DATA_PATH.size(); i++) {
+            delFile(DATA_PATH.get(i));
         }
     }
 
@@ -241,10 +150,10 @@ public class IOCommand {
     }
 
     public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
-        for (int i = 0; i < dataPath.size(); i++) {
+        for (int i = 0; i < DATA_PATH.size(); i++) {
             if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
                 try {
-                    delFile(dataPath.get(i));
+                    delFile(DATA_PATH.get(i));
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("删除特定类型文件出错");

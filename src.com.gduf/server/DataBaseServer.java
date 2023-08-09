@@ -23,7 +23,7 @@ public class DataBaseServer {
     private static HashMap<String, String>[] METHODS;
     //    这个HashMap存储指令和对应方法的映射 目前思路是 服务器激活时通过配置文件读取数据   TBD
 //    更新思路 创立一个hashmap的数组 数组的每一项代表一个数据类型的指令及其映射
-    private static final String METHODS_PATH = "src.com.gduf\\data\\TypeData.properties";
+    private static final String METHODS_PATH = "src.com.gduf\\data\\MethodData.properties";
     private static final int PORT = 8080;
     private static final String STRING_CLASSNAME = "command.StringCommand";
     private static final String LINKED_LIST_CLASSNAME = "command.LinkedListCommand";
@@ -37,25 +37,28 @@ public class DataBaseServer {
     public static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
     public static HashMap<String, String> STRING_DATA;
     public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
+    public static final int Type = 5;
+    public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
+    public static final String TYPE_PATH = "src.com.gduf\\data\\TypeData.properties";
+    public static HashMap<String, String> DATA_PATH;
 
 
     public static void main(String[] args) throws IOException {
 
-//        初始化 加载配置文件
-        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(METHODS_PATH));
-        try {
-            METHODS = (HashMap<String, String>[]) objectInputStream.readObject();
-//            System.out.println(Arrays.toString(Arrays.stream(METHODS).toArray()));
-        } catch (ClassNotFoundException e) {
-            System.out.println("读取配置文件时出错");
-            e.printStackTrace();
-        }
-
-        METHODS = loadData(METHODS_PATH);
+        TYPE_ARRAY = loadData(TYPE_PATH);
+        METHODS = loadData(METHODS_PATH, Type);
         STRING_DATA = loadData(STRING_DATA_PATH, (Class<HashMap<String, String>>) (Class<?>) HashMap.class);
         LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
         HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
         SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
+
+        DATA_PATH.put("METHODS_PATH", "src.com.gduf\\data\\MethodData.properties");
+        DATA_PATH.put("HASH_DATA_PATH", "src.com.gduf\\data\\key_value_data\\HashData.properties");
+        DATA_PATH.put("LINKED_LIST_DATA_PATH", "src.com.gduf\\data\\key_value_data\\LinkedListData.properties");
+        DATA_PATH.put("SET_DATA_PATH", "src.com.gduf\\data\\key_value_data\\SetData.properties");
+        DATA_PATH.put("STRING_DATA_PATH", "src.com.gduf\\data\\key_value_data\\StringData.properties");
+        DATA_PATH.put("TYPE_PATH", "src.com.gduf\\data\\TypeData.properties");
+
 
 //        启动服务器 注册通道 等待连接
         Selector selector = Selector.open();
@@ -217,10 +220,10 @@ public class DataBaseServer {
             try {
                 switch (i) {
                     //            i 则表示命令对应的数据类型
-                    case 0 -> execute = ExecuteOptions(parameterValues, command, STRING_CLASSNAME);
-                    case 1 -> execute = ExecuteOptions(parameterValues, command, LINKED_LIST_CLASSNAME);
-                    case 2 -> execute = ExecuteOptions(parameterValues, command, HASH_CLASSNAME);
-                    case 3 -> execute = ExecuteOptions(parameterValues, command, SET_CLASSNAME);
+                    case 0 -> execute = Execute(parameterValues, command, STRING_CLASSNAME);
+                    case 1 -> execute = Execute(parameterValues, command, LINKED_LIST_CLASSNAME);
+                    case 2 -> execute = Execute(parameterValues, command, HASH_CLASSNAME);
+                    case 3 -> execute = Execute(parameterValues, command, SET_CLASSNAME);
                 }
             } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -239,7 +242,7 @@ public class DataBaseServer {
 
 
     //    通过反射执行方法
-    private static boolean ExecuteOptions(String[] parameterValues, String command, String className) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    private static boolean Execute(String[] parameterValues, String command, String className) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
         Class clazz = Class.forName(className);
         Constructor constructor = clazz.getConstructor();
         Object o = constructor.newInstance();
