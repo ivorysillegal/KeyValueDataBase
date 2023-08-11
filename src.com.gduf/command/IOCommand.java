@@ -5,6 +5,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static server.DataBaseServer.*;
 
@@ -18,16 +20,24 @@ public class IOCommand {
     //    面向4种数据类型的加载方法
     public static <T, U> HashMap<T, U> loadData(String path, Class<HashMap<T, U>> dataType) {
         HashMap<T, U> hashMap = null;
-        try (ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(path))) {
-            Object loadedData = objectIn.readObject();
+        Object loadedData = null;
+        ObjectInputStream objectIn = null;
+        try {
+            objectIn = new ObjectInputStream(new FileInputStream(path));
+            loadedData = objectIn.readObject();
             if (dataType.isInstance(loadedData)) {
                 hashMap = dataType.cast(loadedData);
             } else {
                 System.err.println("类型分配错误");
             }
+            objectIn.close();
+        } catch (EOFException e) {
+            System.out.println(dataType + "类型存储文件为空");
+            hashMap = new HashMap<>();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         if (hashMap == null) {
             hashMap = new HashMap<>();
         }
@@ -49,6 +59,22 @@ public class IOCommand {
             hashMaps = new HashMap[type];
         }
         return hashMaps;
+    }
+
+
+    //    专门面向DATA_PATH数组
+    public static LinkedHashMap<String, String> loadData(String path, LinkedHashMap<String,String> linkedHashMap) {
+        ObjectInputStream objectIn = null;
+        try {
+            objectIn = new ObjectInputStream(new FileInputStream(path));
+            linkedHashMap = (LinkedHashMap<String, String>) objectIn.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (linkedHashMap == null) {
+            linkedHashMap = new LinkedHashMap<>();
+        }
+        return linkedHashMap;
     }
 
 
@@ -75,7 +101,12 @@ public class IOCommand {
                 ObjectOutputStream objectOut = new ObjectOutputStream(new FileOutputStream(pathStr, true))
 //                在try-with-resources的情况下 用完会自动关流
         ) {
+            if (hashMap == null) {
+                hashMap = new HashMap<>();
+            }
             objectOut.writeObject(hashMap);
+        } catch (EOFException e) {
+//            发生此异常的时候表示存储文件为空 创建流的时候就已经出错了 直接不处理
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,8 +114,9 @@ public class IOCommand {
 
 
     private static void saveData(ArrayList<HashMap<?, ?>> hashMapArray) {
-        for (int i = 0; i < DATA_PATH.size(); i++) {
-            saveFile(DATA_PATH.get(i), hashMapArray.get(i));
+        int i = 0;
+        for (Map.Entry<String, String> stringEntry : DATA_PATH.entrySet()) {
+            saveFile(stringEntry.getValue(), hashMapArray.get(i++));
         }
 //        利用for循环依次将所有文件写入
     }
@@ -98,14 +130,13 @@ public class IOCommand {
         hashMapArray.add(SET_DATA);
         hashMapArray.add(HASH_DATA);
         saveData(hashMapArray);
-        System.out.println("1");
     }
 
 
     //    后台保存指令
     public static void bgsave() {
         if (saving) {
-            System.out.println("Another bgsave is already in progress.");
+            System.out.println("另一个后台保存正在执行中");
             return;
         }
         saving = true;
@@ -117,7 +148,9 @@ public class IOCommand {
 //        Lambda表达式
         new Thread(() -> {
             try {
+                System.out.println("正在后台保存中");
                 save();
+                System.out.println("后台保存成功");
             } finally {
                 saving = false;
             }

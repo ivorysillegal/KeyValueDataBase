@@ -18,7 +18,7 @@ public class DataBaseClient {
 //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // 在这里执行你希望在程序退出前保存数据的操作
-//            IOCommand.save();
+            IOCommand.save();
             System.out.println("程序即将退出，保存数据并进行清理操作。");
         }));
 

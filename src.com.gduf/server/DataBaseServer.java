@@ -15,6 +15,8 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static command.IOCommand.*;
 
@@ -37,29 +39,46 @@ public class DataBaseServer {
     public static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
     public static HashMap<String, String> STRING_DATA;
     public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
-    public static final int Type = 5;
+    public static final int TYPE = 5;
     public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
     public static final String TYPE_PATH = "src.com.gduf\\data\\TypeData.properties";
-    public static HashMap<String, String> DATA_PATH;
+    public static LinkedHashMap<String,String> DATA_PATH;
+    public static String DATA_PATH_PATH = "src.com.gduf\\data\\PathData.properties";
     public static final String IO_CLASSNAME = "command.IOCommand";
     public static final String DATA_CLASSNAME = "command.DataCommand";
+    public static final int BGSAVE_SECONDS = 10;
+    public static final int START_DELAY = 10;
+    //        设置保存的间隔时间 和 初始延迟时间
+
 
     public static void main(String[] args) throws IOException {
 
+        DATA_PATH = loadData(DATA_PATH_PATH,DATA_PATH);
         TYPE_ARRAY = loadData(TYPE_PATH);
-        METHODS = loadData(METHODS_PATH, Type);
+        METHODS = loadData(METHODS_PATH, TYPE);
         STRING_DATA = loadData(STRING_DATA_PATH, (Class<HashMap<String, String>>) (Class<?>) HashMap.class);
         LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
         HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
         SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
 
-        DATA_PATH.put("METHODS_PATH", "src.com.gduf\\data\\MethodData.properties");
-        DATA_PATH.put("HASH_DATA_PATH", "src.com.gduf\\data\\key_value_data\\HashData.properties");
-        DATA_PATH.put("LINKED_LIST_DATA_PATH", "src.com.gduf\\data\\key_value_data\\LinkedListData.properties");
-        DATA_PATH.put("SET_DATA_PATH", "src.com.gduf\\data\\key_value_data\\SetData.properties");
-        DATA_PATH.put("STRING_DATA_PATH", "src.com.gduf\\data\\key_value_data\\StringData.properties");
-        DATA_PATH.put("TYPE_PATH", "src.com.gduf\\data\\TypeData.properties");
+        //        设置后台保存的定时任务
+        ScheduledExecutorService bgSaver = Executors.newScheduledThreadPool(1);
+        bgSaver.scheduleAtFixedRate(IOCommand::bgsave, START_DELAY, BGSAVE_SECONDS, TimeUnit.SECONDS);
 
+        //        注册线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        //        程序强制退出或者正常退出时保存数据（利用钩子机制）
+        //        注册钩子机制
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!bgSaver.isShutdown())
+                bgSaver.shutdown();
+            if (!executorService.isShutdown())
+                executorService.shutdown();
+            // 在这里执行你希望在程序退出前保存数据的操作
+            IOCommand.save();
+            System.out.println("程序即将退出，保存数据并进行清理操作。");
+        }));
 
 //        启动服务器 注册通道 等待连接
         Selector selector = Selector.open();
@@ -69,9 +88,6 @@ public class DataBaseServer {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("服务器启动成功");
 //        至此 已经成功启动服务器 下方则是等待客户端的连接
-
-//        注册线程池
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 //        空转等待新的连接
         for (; ; ) {
@@ -184,6 +200,13 @@ public class DataBaseServer {
         int readLength = readyChannel.read(byteBuffer);
 //        创建一个空字符串 用来读取内容
         String msg = "";
+
+//        监听断开的客户端连接 当有连接断开时保存一次数据
+        if (readLength == -1){
+            System.out.println("客户端断开连接 后台开始保存数据");
+            bgsave();
+        }
+
         if (readLength > 0) {
 //            从默认的写模式切换成读的模式
             byteBuffer.flip();
@@ -228,6 +251,9 @@ public class DataBaseServer {
                     case 4 -> execute = Execute(parameterValues, command, IO_CLASSNAME);
                     case 5 -> execute = Execute(parameterValues, command, DATA_CLASSNAME);
                 }
+                if (execute)
+                    System.out.println("1");
+//                方法执行成功返回1
             } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {

@@ -67,7 +67,7 @@ public class DataCommand {
             hashMap.remove(key);
             expiryTasks.remove(key);
             taskDeadlines.remove(key);
-        }, time, TimeUnit.MILLISECONDS);
+        }, time, TimeUnit.SECONDS);
 
         expiryTasks.put(key, expiryTask);
         taskDeadlines.put(key, System.currentTimeMillis() + time);
