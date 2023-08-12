@@ -1,10 +1,5 @@
 package command;
 
-import javax.net.ssl.SSLContext;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -22,83 +17,78 @@ public class LinkedListCommand {
         }
         value.add(0, input);
         LINKED_LIST_DATA.put(key, value);
-        System.out.println("1");
     }
 
     public static void rpush(String key, String input) {
         LinkedList<String> value = LINKED_LIST_DATA.get(key);
         if (value == null) {
             value = new LinkedList<>();
-
         }
+
         value.add(input);
         LINKED_LIST_DATA.put(key, value);
-        System.out.println("1");
     }
 
-    public static void range(String key, String start, String end) {
+    public static String range(String key, String start, String end) {
         LinkedList<String> value = LINKED_LIST_DATA.get(key);
         if (value == null) {
             System.out.println("This LinkedList is null");
-            return;
+            return "null";
         }
+
         int s = Integer.parseInt(start);
         int e = Integer.parseInt(end);
         ListIterator<String> it = value.listIterator(s);
+        StringBuilder msg = new StringBuilder();
         while (it.hasNext() && it.nextIndex() <= e) {
-            System.out.print(it.next() + ' ');
+            msg.append(it.next()).append(' ');
         }
-        System.out.println();
+        return msg.toString();
     }
 
-    public static void len(String key) {
+    public static String len(String key) {
         LinkedList<String> value = LINKED_LIST_DATA.get(key);
-        if (value == null) {
-            System.out.println("This LinkedList is null");
-        } else
-            System.out.println("len is " + value.size());
+        if (value == null)
+            return "null LinkedList";
+        else
+            return "len is " + value.size();
     }
 
-    public static void lpop(String key) {
+    public static String lpop(String key) {
         if (LINKED_LIST_DATA.containsKey(key)) {
             LinkedList<String> value = LINKED_LIST_DATA.get(key);
-            if (value == null) {
-                System.out.println("This LinkedList is null");
-                return;
-            }
+            if (value == null)
+                return "null LinkedList";
             String del = value.pop();
             LINKED_LIST_DATA.put(key, value);
-            System.out.println(del);
+            return "1";
         } else {
-            System.out.println("0");
+            return "null LinkedList";
         }
     }
 
 
-    public static void rpop(String key) {
+    public static String rpop(String key) {
         if (LINKED_LIST_DATA.containsKey(key)) {
             LinkedList<String> value = LINKED_LIST_DATA.get(key);
-            if (value == null) {
-                System.out.println("This LinkedList is null");
-                return;
-            }
-            String del = value.removeLast();
+            if (value == null)
+                return "null LinkedList";
+
+            value.removeLast();
             LINKED_LIST_DATA.put(key, value);
-            System.out.println(del);
-        } else {
-            System.out.println("0");
-        }
+            return "1";
+        } else
+            return "0";
     }
 
-    public static void idel(String key) {
+    public static String idel(String key) {
         LinkedList<String> value = LINKED_LIST_DATA.get(key);
-        if (value == null) {
-            System.out.println("This LinkedList is already null!");
-            return;
-        }
+        if (value == null)
+            return "null LinkedList";
+
         value.clear();
         LINKED_LIST_DATA.put(key, value);
-        System.out.println("1");
+        return "1";
     }
 
 }

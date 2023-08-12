@@ -17,11 +17,14 @@ public class StringCommand {
         STRING_DATA.put(key, value);
     }
 
-    public static void get(String key) {
-        STRING_DATA.get(key);
+    public static String get(String key) {
+        return STRING_DATA.get(key);
     }
 
-    public static void del(String key) {
-        STRING_DATA.remove(key);
+    public static String del(String key) {
+        if (!STRING_DATA.containsKey(key)) {
+            return "null";
+        } else STRING_DATA.remove(key);
+        return "1";
     }
 }

@@ -168,9 +168,10 @@ public class IOCommand {
 
     private static void del() throws IOException {
 //        利用for循环依次将所有文件清空
-        for (int i = 0; i < DATA_PATH.size(); i++) {
-            delFile(DATA_PATH.get(i));
+        for (Map.Entry<String, String> stringEntry : DATA_PATH.entrySet()) {
+            delFile(stringEntry.getValue());
         }
+
     }
 
     //    删除指令
@@ -182,34 +183,37 @@ public class IOCommand {
         }
     }
 
-    public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
-        for (int i = 0; i < DATA_PATH.size(); i++) {
-            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
-                try {
-                    delFile(DATA_PATH.get(i));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("删除特定类型文件出错");
-                }
-            }
-        }
-    }
+//    删除单独类型的文件 TBD
+//    public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
+//        for (int i = 0; i < DATA_PATH.size(); i++) {
+//            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
+//                try {
+//                    delFile(DATA_PATH.get(i));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    System.out.println("删除特定类型文件出错");
+//                }
+//            }
+//        }
+//    }
 
-    private static boolean isSameHashMapType(HashMap<?, ?> hashMap1, HashMap<?, ?> hashMap2) {
-        Type type1 = hashMap1.getClass().getGenericSuperclass();
-        Type type2 = hashMap2.getClass().getGenericSuperclass();
-        if (type1 instanceof ParameterizedType && type2 instanceof ParameterizedType) {
-            ParameterizedType paramType1 = (ParameterizedType) type1;
-            ParameterizedType paramType2 = (ParameterizedType) type2;
-            Type[] actualTypeArguments1 = paramType1.getActualTypeArguments();
-            Type[] actualTypeArguments2 = paramType2.getActualTypeArguments();
-            // 判断键的类型和值的类型是否相同
-            if (actualTypeArguments1.length == 2 && actualTypeArguments2.length == 2) {
-                return actualTypeArguments1[0].equals(actualTypeArguments2[0]) &&
-                        actualTypeArguments1[1].equals(actualTypeArguments2[1]);
-            }
-        }
+//    private static boolean isSameHashMapType(HashMap<?, ?> hashMap1, HashMap<?, ?> hashMap2) {
+//        Type type1 = hashMap1.getClass().getGenericSuperclass();
+//        Type type2 = hashMap2.getClass().getGenericSuperclass();
+//        if (type1 instanceof ParameterizedType && type2 instanceof ParameterizedType) {
+//            ParameterizedType paramType1 = (ParameterizedType) type1;
+//            ParameterizedType paramType2 = (ParameterizedType) type2;
+//            Type[] actualTypeArguments1 = paramType1.getActualTypeArguments();
+//            Type[] actualTypeArguments2 = paramType2.getActualTypeArguments();
+//            // 判断键的类型和值的类型是否相同
+//            if (actualTypeArguments1.length == 2 && actualTypeArguments2.length == 2) {
+//                return actualTypeArguments1[0].equals(actualTypeArguments2[0]) &&
+//                        actualTypeArguments1[1].equals(actualTypeArguments2[1]);
+//            }
+//        }
+//
+//        return false;
+//    }
 
-        return false;
-    }
+
 }

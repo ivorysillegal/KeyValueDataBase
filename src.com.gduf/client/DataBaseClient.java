@@ -43,6 +43,15 @@ public class DataBaseClient {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();
+            if(msg.equals("exit")){
+                try {
+                    selector.close();
+                    socketChannel.close();
+                    break;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (msg.length() > 0) {
                 try {
                     socketChannel.write(Charset.forName("UTF-8").encode(msg));

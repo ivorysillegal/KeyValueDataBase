@@ -21,6 +21,9 @@ public class ClientThread implements Runnable {
     public void run() {
         try {
             for (; ; ) {
+
+                if (!selector.isOpen())
+                    break;
 //            获取channel数量 (判断当前有没有空闲的channel)
                 int readChannels = selector.select();
                 if (readChannels == 0) {
