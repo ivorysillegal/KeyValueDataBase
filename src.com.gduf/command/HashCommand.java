@@ -2,7 +2,7 @@ package command;
 
 import java.util.HashMap;
 
-import static server.DataBaseServer.HASH_DATA;
+import static server.FileInitialization.HASH_DATA;
 
 public class HashCommand {
     public HashCommand() {

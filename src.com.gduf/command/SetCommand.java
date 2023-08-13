@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.*;
 
-import static server.DataBaseServer.SET_DATA;
+import static server.FileInitialization.SET_DATA;
 
 public class SetCommand {
 

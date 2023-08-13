@@ -14,56 +14,28 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static command.IOCommand.*;
+import static server.FileInitialization.*;
 
 public class DataBaseServer {
 
-    private static HashMap<String, String>[] METHODS;
-    //    这个HashMap存储指令和对应方法的映射 目前思路是 服务器激活时通过配置文件读取数据   TBD
-//    更新思路 创立一个hashmap的数组 数组的每一项代表一个数据类型的指令及其映射
-    private static final String METHODS_PATH = "src.com.gduf\\data\\MethodData.properties";
-    private static final int PORT = 8080;
-    private static final String STRING_CLASSNAME = "command.StringCommand";
-    private static final String LINKED_LIST_CLASSNAME = "command.LinkedListCommand";
-    private static final String HASH_CLASSNAME = "command.HashCommand";
-    private static final String SET_CLASSNAME = "command.SetCommand";
-    public static HashMap<String, HashMap<String, String>> HASH_DATA;
-    public static final String HASH_DATA_PATH = "src.com.gduf\\data\\key_value_data\\HashData.properties";
-    public static HashMap<String, LinkedList<String>> LINKED_LIST_DATA;
-    public static final String LINKED_LIST_DATA_PATH = "src.com.gduf\\data\\key_value_data\\LinkedListData.properties";
-    public static HashMap<String, HashSet<String>> SET_DATA;
-    public static final String SET_DATA_PATH = "src.com.gduf\\data\\key_value_data\\SetData.properties";
-    public static HashMap<String, String> STRING_DATA;
-    public static final String STRING_DATA_PATH = "src.com.gduf\\data\\key_value_data\\StringData.properties";
-    public static final int TYPE = 5;
-    public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
-    public static final String TYPE_PATH = "src.com.gduf\\data\\TypeData.properties";
-    public static LinkedHashMap<String, String> DATA_PATH;
-    public static String DATA_PATH_PATH = "src.com.gduf\\data\\PathData.properties";
-    public static final String IO_CLASSNAME = "command.IOCommand";
-    public static final String DATA_CLASSNAME = "command.DataCommand";
     public static final int BGSAVE_SECONDS = 10;
     public static final int START_DELAY = 10;
+    public static final int corePoolSize = 1;
+    public static final int nThreads = 10;
     //        设置保存的间隔时间 和 初始延迟时间
-
 
     public static void main(String[] args) throws IOException {
 
-        DATA_PATH = loadData(DATA_PATH_PATH, DATA_PATH);
-        TYPE_ARRAY = loadData(TYPE_PATH);
-        METHODS = loadData(METHODS_PATH, TYPE);
-        STRING_DATA = loadData(STRING_DATA_PATH, (Class<HashMap<String, String>>) (Class<?>) HashMap.class);
-        LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
-        HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
-        SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
-
+        load();
         //        设置后台保存的定时任务
-        ScheduledExecutorService bgSaver = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService bgSaver = Executors.newScheduledThreadPool(corePoolSize);
         bgSaver.scheduleAtFixedRate(IOCommand::bgsave, START_DELAY, BGSAVE_SECONDS, TimeUnit.SECONDS);
 
         //        注册线程池
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
 
         //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         //        注册钩子机制
@@ -80,7 +52,7 @@ public class DataBaseServer {
 //        启动服务器 注册通道 等待连接
         Selector selector = Selector.open();
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress(PORT));
+        serverSocketChannel.bind(new InetSocketAddress(Integer.parseInt(PORT)));
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("服务器启动成功");
@@ -146,16 +118,15 @@ public class DataBaseServer {
 //        处理来自读取的操作
         //            只要通道仍然注册在选择器上，并且不需要更改其关注的事件的时候
 //            不需要在每次执行操作后重新注册通道
-//        executorService.submit(() -> {
+        executorService.submit(() -> {
 //            执行具体逻辑
-        System.out.println("123");
-        try {
-            handleReadData(clientChannel, selector);
-        } catch (IOException e) {
-            System.out.println("执行读的操作的时候出错");
-            e.printStackTrace();
-        }
-//        });
+            try {
+                handleReadData(clientChannel, selector);
+            } catch (IOException e) {
+                System.out.println("执行读的操作的时候出错");
+                e.printStackTrace();
+            }
+        });
     }
 
 
@@ -167,16 +138,12 @@ public class DataBaseServer {
 //        主线程完成了连接的交接任务后 将真正的执行任务给新的从线程来做
 
         // Hand off the new connection to a worker thread for handling
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                // Handle new client connection
-                try {
-                    handleClientConnection(clientChannel);
-                } catch (IOException e) {
-                    System.out.println("服务器已连接上 输出信息错误！");
-                    e.printStackTrace();
-                }
+        executorService.submit(() -> {
+            try {
+                handleClientConnection(clientChannel);
+            } catch (IOException e) {
+                System.out.println("服务器已连接上 输出信息错误！");
+                e.printStackTrace();
             }
         });
     }
@@ -193,7 +160,7 @@ public class DataBaseServer {
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 
 //        创建一个空字符串 用来读取内容
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
 
         while (true) {
             //        循环读取客户端消息
@@ -206,19 +173,18 @@ public class DataBaseServer {
 //            bgsave();
                 break;
             }
-            if (readLength == 0) {
+
+            if (readLength == 0)
                 break;
-            }
 
             if (readLength > 0) {
 //            从默认的写模式切换成读的模式
                 byteBuffer.flip();
 //            读取内容
-                msg += Charset.forName("UTF-8").decode(byteBuffer);
-
+                msg.append(Charset.forName("UTF-8").decode(byteBuffer));
 
                 String command = null;
-                String[] commands = msg.split(" ");
+                String[] commands = msg.toString().split(" ");
                 int i;
 //        遍历数组里面的指令 看一下是否有正确的指令
 //            一种数据类型的命令放在一个 String String 的hashmap中
@@ -236,9 +202,11 @@ public class DataBaseServer {
                 }
 
                 boolean execute = false;
-//            flag表示方法执行成功与否
+//            execute表示方法执行成功与否
 
-                if (command != null) {
+                if (command == null)
+                    readyChannel.write(Charset.forName("UTF-8").encode("'" + commands[0] + "' " + "不是数据库命令"));
+                else if (command != null) {
 //                进入此if分支语句则表示 有存在输入的命令
 
                     int length = commands.length;
@@ -248,38 +216,37 @@ public class DataBaseServer {
 //                parameterValues则是后面利用反射执行方法时候 所传入代表可变参数的数组
 
                     try {
-                        switch (i) {
-                            //            i 则表示命令对应的数据类型
-                            case 0 -> execute = Execute(readyChannel, parameterValues, command, STRING_CLASSNAME);
-                            case 1 -> execute = Execute(readyChannel, parameterValues, command, LINKED_LIST_CLASSNAME);
-                            case 2 -> execute = Execute(readyChannel, parameterValues, command, HASH_CLASSNAME);
-                            case 3 -> execute = Execute(readyChannel, parameterValues, command, SET_CLASSNAME);
-                            case 4 -> execute = Execute(readyChannel, parameterValues, command, IO_CLASSNAME);
-                            case 5 -> execute = Execute(readyChannel, parameterValues, command, DATA_CLASSNAME);
-                        }
-
+                        //            i 则表示命令对应的数据类型
+                        execute = Execute(i, readyChannel, parameterValues, command);
                     } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
-                        System.out.println("调用方法形参出现错误");
                         readyChannel.write(Charset.forName("UTF-8").encode("调用方法形参出现错误"));
                     }
-
                 }
-                if (!execute) {
+                if (!execute)
                     readyChannel.write(Charset.forName("UTF-8").encode("参数输入错误 请重新输入"));
-                    readyChannel.write(Charset.forName("UTF-8").encode("'" + commands[0] + "' " + "不是数据库命令"));
-                }
+                break;
             }
         }
-
 
         readyChannel.register(selector, SelectionKey.OP_READ);
     }
 
 
     //    通过反射执行方法
-    private static boolean Execute(SocketChannel readyChannel, String[] parameterValues, String command, String className) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+    private static boolean Execute(int i, SocketChannel readyChannel, String[] parameterValues, String command) throws ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
+        String className = null;
+        switch (i) {
+            case 0 -> className = STRING_CLASSNAME;
+            case 1 -> className = LINKED_LIST_CLASSNAME;
+            case 2 -> className = HASH_CLASSNAME;
+            case 3 -> className = SET_CLASSNAME;
+            case 4 -> className = IO_CLASSNAME;
+            case 5 -> className = DATA_CLASSNAME;
+        }
+        if (className == null)
+            return false;
         Class clazz = Class.forName(className);
         Constructor constructor = clazz.getConstructor();
         Object o = constructor.newInstance();
@@ -287,17 +254,23 @@ public class DataBaseServer {
         for (Method method : methods) {
             if (method.getName().equals(command)) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if (parameterTypes.length == 0) {
-                    method.invoke(command);
-                }
                 if (method.getParameterCount() != parameterValues.length)
                     return false;
                 method.setAccessible(true);
-                Object feedback = method.invoke(o, (Object[]) parameterValues);
+
+                Object feedback;
+                if (parameterTypes.length == 0)
+                    feedback = method.invoke(command);
+                else
+                    feedback = method.invoke(o, (Object[]) parameterValues);
 
 //                若有返回值就将返回值传回客户端 没返回值就返回1
                 if (feedback == null) {
-                    System.out.println("1");
+                    try {
+                        readyChannel.write(Charset.forName("UTF-8").encode("1"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     try {
                         readyChannel.write(Charset.forName("UTF-8").encode(String.valueOf(feedback)));
@@ -305,7 +278,6 @@ public class DataBaseServer {
                         e.printStackTrace();
                     }
                 }
-
                 return true;
             }
         }

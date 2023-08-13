@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static server.DataBaseServer.*;
+import static server.FileInitialization.*;
 
 //目前思路：
 //创建一个集合 存放配置文件的路径

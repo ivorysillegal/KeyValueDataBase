@@ -3,7 +3,8 @@ package command;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import static server.DataBaseServer.LINKED_LIST_DATA;
+
+import static server.FileInitialization.LINKED_LIST_DATA;
 
 public class LinkedListCommand {
 

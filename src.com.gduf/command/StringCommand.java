@@ -1,11 +1,7 @@
 package command;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.HashMap;
 
-import static server.DataBaseServer.STRING_DATA;
+import static server.FileInitialization.STRING_DATA;
 
 public class StringCommand {
 
@@ -13,8 +9,11 @@ public class StringCommand {
 
     }
 
-    public static void set(String key, String value) {
+    public static String set(String key, String value) {
+        if (!STRING_DATA.containsKey(key))
+            return "null";
         STRING_DATA.put(key, value);
+        return "1";
     }
 
     public static String get(String key) {
