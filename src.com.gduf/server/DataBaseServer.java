@@ -16,20 +16,25 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static command.IOCommand.*;
 import static server.FileInitialization.*;
 
 public class DataBaseServer {
 
-    public static final int BGSAVE_SECONDS = 10;
-    public static final int START_DELAY = 10;
+    public static final int BGSAVE_SECONDS = 30;
+    public static final int START_DELAY = 20;
+    //        设置保存的间隔时间 和 初始延迟时间
     public static final int corePoolSize = 1;
     public static final int nThreads = 10;
-    //        设置保存的间隔时间 和 初始延迟时间
+//    设置执行程序的和定时任务的线程池大小
 
     public static void main(String[] args) throws IOException {
 
         load();
+//        使用FileInitialization类中的静态load方法
+//        使用静态方法的时候 加载了他的类 使其中的常量全部得以加载
+//        当调用一个类的静态方法时，会首先执行静态初始化块（静态代码块），然后再执行该方法
+//        并且静态代码块只会执行一次 完美符合加载常量的要求
+
         //        设置后台保存的定时任务
         ScheduledExecutorService bgSaver = Executors.newScheduledThreadPool(corePoolSize);
         bgSaver.scheduleAtFixedRate(IOCommand::bgsave, START_DELAY, BGSAVE_SECONDS, TimeUnit.SECONDS);
@@ -40,8 +45,9 @@ public class DataBaseServer {
         //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         //        注册钩子机制
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (!bgSaver.isShutdown())
+            if (!bgSaver.isShutdown()) {
                 bgSaver.shutdown();
+            }
             if (!executorService.isShutdown())
                 executorService.shutdown();
             // 在这里执行你希望在程序退出前保存数据的操作
@@ -87,38 +93,28 @@ public class DataBaseServer {
 
                     readOperator(selector, key, executorService);
 
-                } else if (key.isWritable()) {
-
-                    writeOperator(selector, key, executorService);
-
                 }
             }
         }
     }
 
-    private static void writeOperator(Selector selector, SelectionKey key, ExecutorService executorService) {
-        SocketChannel clientChannel = (SocketChannel) key.channel();
-        // Hand off the read data to a worker thread for handling
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                // Handle read data from the client
-                handleWriteData(clientChannel);
-            }
-        });
-
-    }
-
-    private static void handleWriteData(SocketChannel clientChannel) {
-
-    }
-
     private static void readOperator(Selector selector, SelectionKey key, ExecutorService executorService) {
         SocketChannel clientChannel = (SocketChannel) key.channel();
 //        处理来自读取的操作
-        //            只要通道仍然注册在选择器上，并且不需要更改其关注的事件的时候
+//            只要通道仍然注册在选择器上，并且不需要更改其关注的事件的时候
 //            不需要在每次执行操作后重新注册通道
-        executorService.submit(() -> {
+
+        if (!clientChannel.isConnected()) {
+            System.out.println("连接已断开，关闭通道并取消注册。");
+            try {
+                clientChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
+
+        } else {
+//        executorService.submit(() -> {
 //            执行具体逻辑
             try {
                 handleReadData(clientChannel, selector);
@@ -126,7 +122,14 @@ public class DataBaseServer {
                 System.out.println("执行读的操作的时候出错");
                 e.printStackTrace();
             }
-        });
+//        });
+        }
+//        程序执行完之后 重新注册通道到线程池中
+        try {
+            clientChannel.register(selector, SelectionKey.OP_READ);
+        } catch (ClosedChannelException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -164,12 +167,23 @@ public class DataBaseServer {
 
         while (true) {
             //        循环读取客户端消息
-            int readLength = readyChannel.read(byteBuffer);
+            int readLength = 0;
+            try {
+                readLength = readyChannel.read(byteBuffer);
+            } catch (Exception e) {
+                System.out.println("断开连接");
+                try {
+                    readyChannel.register(selector, SelectionKey.OP_READ);
+                } catch (ClosedChannelException e1) {
+                    e.printStackTrace();
+                }
+                break;
+            }
 
             //        监听断开的客户端连接
 //        当有连接断开时保存一次数据 —————— 不能保存出死循环
             if (readLength == -1) {
-                System.out.println("客户端断开连接 后台开始保存数据");
+                System.out.println("客户端断开连接");
 //            bgsave();
                 break;
             }
@@ -218,6 +232,7 @@ public class DataBaseServer {
                     try {
                         //            i 则表示命令对应的数据类型
                         execute = Execute(i, readyChannel, parameterValues, command);
+
                     } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
@@ -230,7 +245,6 @@ public class DataBaseServer {
             }
         }
 
-        readyChannel.register(selector, SelectionKey.OP_READ);
     }
 
 

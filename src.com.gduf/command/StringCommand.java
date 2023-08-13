@@ -10,13 +10,13 @@ public class StringCommand {
     }
 
     public static String set(String key, String value) {
-        if (!STRING_DATA.containsKey(key))
-            return "null";
         STRING_DATA.put(key, value);
         return "1";
     }
 
     public static String get(String key) {
+        if (!STRING_DATA.containsKey(key))
+            return "null";
         return STRING_DATA.get(key);
     }
 

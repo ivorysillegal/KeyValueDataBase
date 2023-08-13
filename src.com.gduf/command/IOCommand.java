@@ -163,7 +163,6 @@ public class IOCommand {
 //        利用输出流默认不续写的特性 将文件覆盖为空文件 达到清空的目的
         FileOutputStream fos = new FileOutputStream(pathsStr);
         fos.close();
-        System.out.println("文件内容已清空");
     }
 
 
@@ -172,7 +171,7 @@ public class IOCommand {
         for (Map.Entry<String, String> stringEntry : DATA_PATH.entrySet()) {
             delFile(stringEntry.getValue());
         }
-
+        System.out.println("文件内容已清空");
     }
 
     //    删除指令

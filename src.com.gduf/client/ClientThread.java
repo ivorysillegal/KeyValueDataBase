@@ -38,10 +38,10 @@ public class ClientThread implements Runnable {
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
 
-//        5 根据就绪状态 调用对应方法实现具体业务操作
+//        根据就绪状态 调用对应方法实现具体业务操作
 //                    这里不需要连接的状态 因为进入了这个线程 相当于已经连接上了
 //                    这个线程是专门用来接收服务器的信息的
-//        5.2 如果可读状态
+//        如果可读状态
                     if (selectionKey.isReadable()) {
                         readOperator(selector, selectionKey);
                     }
