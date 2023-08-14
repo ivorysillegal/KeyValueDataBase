@@ -18,6 +18,7 @@ public class FileInitialization {
     public static final String SET_DATA_PATH;
     public static final String DATA_PATH_PATH;
 
+    public static final String HOST_NAME;
     public static final String PORT;
     public static final String STRING_CLASSNAME;
     public static final String LINKED_LIST_CLASSNAME;
@@ -55,6 +56,8 @@ public class FileInitialization {
         SET_DATA_PATH = properties.getProperty("SET_DATA_PATH");
         DATA_PATH_PATH = properties.getProperty("DATA_PATH_PATH");
         PORT = properties.getProperty("PORT");
+        HOST_NAME = properties.getProperty("HOST_NAME");
+
         STRING_CLASSNAME = properties.getProperty("STRING_CLASSNAME");
         LINKED_LIST_CLASSNAME = properties.getProperty("LINKED_LIST_CLASSNAME");
         HASH_CLASSNAME = properties.getProperty("HASH_CLASSNAME");

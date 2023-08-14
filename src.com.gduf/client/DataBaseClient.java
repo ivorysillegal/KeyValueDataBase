@@ -3,6 +3,7 @@ package client;
 import command.IOCommand;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -10,16 +11,24 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
+import static server.FileInitialization.HOST_NAME;
+import static server.FileInitialization.PORT;
+
 public class DataBaseClient {
 
+    protected static int  mainReturnValue;
     //    启动客户端的方法
     public void startClient() {
 
 //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // 在这里执行你希望在程序退出前保存数据的操作
-            IOCommand.save();
-            System.out.println("程序即将退出，保存数据并进行清理操作。");
+            if (!(mainReturnValue == 111)){
+                try {
+                    IOCommand.save();
+                    System.out.println("程序即将退出，保存数据并进行清理操作。");
+                } catch (NullPointerException e){}
+            }
         }));
 
 //        连接服务器端
@@ -27,7 +36,13 @@ public class DataBaseClient {
         Selector selector = null;
         try {
 
-            socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 8080));
+            try {
+                socketChannel = SocketChannel.open(new InetSocketAddress(HOST_NAME, Integer.parseInt(PORT)));
+            } catch (ConnectException e) {
+                System.out.println("未启动服务器 请启动服务器后重试");
+                mainReturnValue = 111;
+                System.exit(mainReturnValue);
+            }
             selector = Selector.open();
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
@@ -44,6 +59,7 @@ public class DataBaseClient {
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();
             if(msg.equals("exit")){
+                System.out.println("客户端即将断开");
                 try {
                     selector.close();
                     socketChannel.close();

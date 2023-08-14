@@ -1,6 +1,7 @@
 package client;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -8,6 +9,8 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
+
+import static client.DataBaseClient.mainReturnValue;
 
 public class ClientThread implements Runnable {
     private Selector selector;
@@ -43,7 +46,12 @@ public class ClientThread implements Runnable {
 //                    这个线程是专门用来接收服务器的信息的
 //        如果可读状态
                     if (selectionKey.isReadable()) {
-                        readOperator(selector, selectionKey);
+                        try {
+                            readOperator(selector, selectionKey);
+                        } catch (SocketException e) {
+                            System.out.println("服务器关闭 客户端自动断开连接");
+                            System.exit(mainReturnValue);
+                        }
                     }
                 }
             }

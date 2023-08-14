@@ -17,6 +17,7 @@ public class WriteProperties {
         properties.setProperty("SET_DATA_PATH", "src.com.gduf\\data\\key_value_data\\SetData.properties");
         properties.setProperty("DATA_PATH_PATH", "src.com.gduf\\data\\PathData.properties");
 
+        properties.setProperty("HOST_NAME","127.0.0.1");
         properties.setProperty("PORT", "8080");
         properties.setProperty("STRING_CLASSNAME", "command.StringCommand");
         properties.setProperty("LINKED_LIST_CLASSNAME", "command.LinkedListCommand");

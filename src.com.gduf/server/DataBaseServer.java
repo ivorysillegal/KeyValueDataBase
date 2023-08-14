@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
@@ -16,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static command.IOCommand.bgsave;
 import static server.FileInitialization.*;
 
 public class DataBaseServer {
@@ -79,20 +81,10 @@ public class DataBaseServer {
             while (keyIterator.hasNext()) {
                 final SelectionKey key = keyIterator.next();
                 keyIterator.remove();
-//                使用了此个selectionKey之后 迭代器中的空闲通道减少 所以在此处要再次获取迭代器
-
-//                判断就绪的selectionKey的状态
                 if (key.isAcceptable()) {
-//                    ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
-//                    SocketChannel clientChannel = serverChannel.accept();
-//                   上面的注释掉的第一行代码是多余的 因为在accept方法中已经获取到Selection中的key了
-//                   但是除了accept方法其他都需要获取key
                     acceptOperator(serverSocketChannel, selector, executorService);
-
                 } else if (key.isReadable()) {
-
                     readOperator(selector, key, executorService);
-
                 }
             }
         }
@@ -114,21 +106,15 @@ public class DataBaseServer {
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
 
         } else {
-//        executorService.submit(() -> {
+        executorService.submit(() -> {
 //            执行具体逻辑
             try {
-                handleReadData(clientChannel, selector);
+                handleReadData(clientChannel, selector, key);
             } catch (IOException e) {
                 System.out.println("执行读的操作的时候出错");
                 e.printStackTrace();
             }
-//        });
-        }
-//        程序执行完之后 重新注册通道到线程池中
-        try {
-            clientChannel.register(selector, SelectionKey.OP_READ);
-        } catch (ClosedChannelException e) {
-            e.printStackTrace();
+        });
         }
     }
 
@@ -140,7 +126,6 @@ public class DataBaseServer {
         clientChannel.register(selector, SelectionKey.OP_READ);
 //        主线程完成了连接的交接任务后 将真正的执行任务给新的从线程来做
 
-        // Hand off the new connection to a worker thread for handling
         executorService.submit(() -> {
             try {
                 handleClientConnection(clientChannel);
@@ -157,7 +142,7 @@ public class DataBaseServer {
     }
 
 
-    private static void handleReadData(SocketChannel readyChannel, Selector selector) throws IOException {
+    private static void handleReadData(SocketChannel readyChannel, Selector selector, SelectionKey selectionKey) throws IOException {
 //        输出的命令会在这个地方接收
 //        这里应该利用反射获取方法
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
@@ -165,31 +150,24 @@ public class DataBaseServer {
 //        创建一个空字符串 用来读取内容
         StringBuilder msg = new StringBuilder();
 
-        while (true) {
-            //        循环读取客户端消息
+//        读取客户端消息
             int readLength = 0;
             try {
                 readLength = readyChannel.read(byteBuffer);
-            } catch (Exception e) {
-                System.out.println("断开连接");
-                try {
-                    readyChannel.register(selector, SelectionKey.OP_READ);
-                } catch (ClosedChannelException e1) {
-                    e.printStackTrace();
-                }
-                break;
+            } catch (IOException e) {
+                readLength = -1;
             }
 
-            //        监听断开的客户端连接
-//        当有连接断开时保存一次数据 —————— 不能保存出死循环
             if (readLength == -1) {
-                System.out.println("客户端断开连接");
-//            bgsave();
-                break;
+                selectionKey.cancel();
+                selectionKey.attach("DISCONNECTED");
+                System.out.println("客户端断开连接 后台保存数据");
+                bgsave();
+            }
+            if (!"DISCONNECTED".equals(selectionKey.attachment())) {
+                readyChannel.register(selector, SelectionKey.OP_READ);
             }
 
-            if (readLength == 0)
-                break;
 
             if (readLength > 0) {
 //            从默认的写模式切换成读的模式
@@ -241,11 +219,8 @@ public class DataBaseServer {
                 }
                 if (!execute)
                     readyChannel.write(Charset.forName("UTF-8").encode("参数输入错误 请重新输入"));
-                break;
             }
         }
-
-    }
 
 
     //    通过反射执行方法
