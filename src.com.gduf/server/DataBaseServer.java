@@ -7,7 +7,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
@@ -93,8 +92,6 @@ public class DataBaseServer {
     private static void readOperator(Selector selector, SelectionKey key, ExecutorService executorService) {
         SocketChannel clientChannel = (SocketChannel) key.channel();
 //        处理来自读取的操作
-//            只要通道仍然注册在选择器上，并且不需要更改其关注的事件的时候
-//            不需要在每次执行操作后重新注册通道
 
         if (!clientChannel.isConnected()) {
             System.out.println("连接已断开，关闭通道并取消注册。");
@@ -104,7 +101,6 @@ public class DataBaseServer {
                 e.printStackTrace();
             }
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
-
         } else {
         executorService.submit(() -> {
 //            执行具体逻辑
@@ -137,14 +133,13 @@ public class DataBaseServer {
     }
 
     private static void handleClientConnection(SocketChannel clientChannel) throws IOException {
-        // 处理来自客户端的新的连接(已连接)-------连接上了的话你想执行什么 操作 可以选择在这里记录报文或者日志
+        // 处理来自客户端的新的连接(已连接)-------连接上了之后执行什么的操作
         clientChannel.write(Charset.forName("UTF-8").encode("此客户端已连接！"));
     }
 
 
     private static void handleReadData(SocketChannel readyChannel, Selector selector, SelectionKey selectionKey) throws IOException {
 //        输出的命令会在这个地方接收
-//        这里应该利用反射获取方法
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 
 //        创建一个空字符串 用来读取内容
@@ -154,19 +149,19 @@ public class DataBaseServer {
             int readLength = 0;
             try {
                 readLength = readyChannel.read(byteBuffer);
+
+//                处理客户端关闭连接，服务器端在尝试读取时发现连接已被重置，从而引发的异常
             } catch (IOException e) {
                 readLength = -1;
             }
-
             if (readLength == -1) {
                 selectionKey.cancel();
                 selectionKey.attach("DISCONNECTED");
                 System.out.println("客户端断开连接 后台保存数据");
                 bgsave();
             }
-            if (!"DISCONNECTED".equals(selectionKey.attachment())) {
+            if (!"DISCONNECTED".equals(selectionKey.attachment()))
                 readyChannel.register(selector, SelectionKey.OP_READ);
-            }
 
 
             if (readLength > 0) {

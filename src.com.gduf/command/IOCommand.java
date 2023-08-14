@@ -1,14 +1,11 @@
 package command;
 
 import java.io.*;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static server.DataBaseServer.*;
 import static server.FileInitialization.*;
 
 //目前思路：
