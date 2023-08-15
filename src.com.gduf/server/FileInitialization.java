@@ -1,7 +1,11 @@
 package server;
 
+import org.apache.logging.log4j.core.config.Configurator;
+import test.TestLog4j;
+
 import java.io.FileInputStream;
 
+import java.net.URL;
 import java.util.*;
 
 import static command.IOCommand.loadData;
@@ -67,6 +71,21 @@ public class FileInitialization {
     }
 
     public static void load() {
+
+        ClassLoader classLoader = TestLog4j.class.getClassLoader();
+        // 使用 ClassLoader 获取资源的相对路径
+        String configFileRelativePath = "log4j.xml";
+        URL configFileUrl = classLoader.getResource(configFileRelativePath);
+        if (configFileUrl != null) {
+            String configFileAbsolutePath = configFileUrl.getPath();
+            System.out.println("Log4j日志系统加载成功 其具体路径为：" + configFileAbsolutePath);
+            Configurator.initialize(null, configFileAbsolutePath);
+        } else
+            System.out.println("Log4j日志系统加载失败");
+
+
+
+
         DATA_PATH = loadData(DATA_PATH_PATH, DATA_PATH);
         TYPE_ARRAY = loadData(TYPE_PATH);
         METHODS = loadData(METHODS_PATH, TYPE);

@@ -1,6 +1,7 @@
 package server;
 
 import command.IOCommand;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.Logger;
 
 import static command.IOCommand.bgsave;
 import static server.FileInitialization.*;
@@ -26,7 +28,9 @@ public class DataBaseServer {
     //        设置保存的间隔时间 和 初始延迟时间
     public static final int corePoolSize = 1;
     public static final int nThreads = 10;
-//    设置执行程序的和定时任务的线程池大小
+    //    设置执行程序的和定时任务的线程池大小
+    private static final Logger logger = LogManager.getLogger(DataBaseServer.class);
+
 
     public static void main(String[] args) throws IOException {
 
@@ -102,15 +106,15 @@ public class DataBaseServer {
             }
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
         } else {
-        executorService.submit(() -> {
+            executorService.submit(() -> {
 //            执行具体逻辑
-            try {
-                handleReadData(clientChannel, selector, key);
-            } catch (IOException e) {
-                System.out.println("执行读的操作的时候出错");
-                e.printStackTrace();
-            }
-        });
+                try {
+                    handleReadData(clientChannel, selector, key);
+                } catch (IOException e) {
+                    System.out.println("执行读的操作的时候出错");
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -146,76 +150,76 @@ public class DataBaseServer {
         StringBuilder msg = new StringBuilder();
 
 //        读取客户端消息
-            int readLength = 0;
-            try {
-                readLength = readyChannel.read(byteBuffer);
+        int readLength = 0;
+        try {
+            readLength = readyChannel.read(byteBuffer);
 
 //                处理客户端关闭连接，服务器端在尝试读取时发现连接已被重置，从而引发的异常
-            } catch (IOException e) {
-                readLength = -1;
-            }
-            if (readLength == -1) {
-                selectionKey.cancel();
-                selectionKey.attach("DISCONNECTED");
-                System.out.println("客户端断开连接 后台保存数据");
-                bgsave();
-            }
-            if (!"DISCONNECTED".equals(selectionKey.attachment()))
-                readyChannel.register(selector, SelectionKey.OP_READ);
+        } catch (IOException e) {
+            readLength = -1;
+        }
+        if (readLength == -1) {
+            selectionKey.cancel();
+            selectionKey.attach("DISCONNECTED");
+            System.out.println("客户端断开连接 后台保存数据");
+            bgsave();
+        }
+        if (!"DISCONNECTED".equals(selectionKey.attachment()))
+            readyChannel.register(selector, SelectionKey.OP_READ);
 
 
-            if (readLength > 0) {
+        if (readLength > 0) {
 //            从默认的写模式切换成读的模式
-                byteBuffer.flip();
+            byteBuffer.flip();
 //            读取内容
-                msg.append(Charset.forName("UTF-8").decode(byteBuffer));
+            msg.append(Charset.forName("UTF-8").decode(byteBuffer));
 
-                String command = null;
-                String[] commands = msg.toString().split(" ");
-                int i;
+            String command = null;
+            String[] commands = msg.toString().split(" ");
+            int i;
 //        遍历数组里面的指令 看一下是否有正确的指令
 //            一种数据类型的命令放在一个 String String 的hashmap中
 //            例如说 :
 //            METHOD[0] 中存放HashMap<String,String>的命令
 //            METHODS[1]中存放HashMap<String,HashMap<String,String>>的命令
-                for (i = 0; i < METHODS.length; i++) {
-                    command = METHODS[i].get(commands[0]);
-                    if (command != null) {
-                        break;
-                    }
+            for (i = 0; i < METHODS.length; i++) {
+                command = METHODS[i].get(commands[0]);
+                if (command != null) {
+                    break;
+                }
 //            i 则表示命令对应的数据类型
 //            重名的命令处理  TBD
 //            看是否能获取到相同名字的命令
-                }
+            }
 
-                boolean execute = false;
+            boolean execute = false;
 //            execute表示方法执行成功与否
 
-                if (command == null)
-                    readyChannel.write(Charset.forName("UTF-8").encode("'" + commands[0] + "' " + "不是数据库命令"));
-                else if (command != null) {
+            if (command == null)
+                readyChannel.write(Charset.forName("UTF-8").encode("'" + commands[0] + "' " + "不是数据库命令"));
+            else if (command != null) {
 //                进入此if分支语句则表示 有存在输入的命令
 
-                    int length = commands.length;
-                    String[] parameterValues = new String[length - 1];
-                    System.arraycopy(commands, 1, parameterValues, 0, parameterValues.length);
+                int length = commands.length;
+                String[] parameterValues = new String[length - 1];
+                System.arraycopy(commands, 1, parameterValues, 0, parameterValues.length);
 //                将输入的命令减去第一项 剩下的就是传入方法的形参
 //                parameterValues则是后面利用反射执行方法时候 所传入代表可变参数的数组
 
-                    try {
-                        //            i 则表示命令对应的数据类型
-                        execute = Execute(i, readyChannel, parameterValues, command);
+                try {
+                    //            i 则表示命令对应的数据类型
+                    execute = Execute(i, readyChannel, parameterValues, command);
 
-                    } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        readyChannel.write(Charset.forName("UTF-8").encode("调用方法形参出现错误"));
-                    }
+                } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    readyChannel.write(Charset.forName("UTF-8").encode("调用方法形参出现错误"));
                 }
-                if (!execute)
-                    readyChannel.write(Charset.forName("UTF-8").encode("参数输入错误 请重新输入"));
             }
+            if (!execute)
+                readyChannel.write(Charset.forName("UTF-8").encode("参数输入错误 请重新输入"));
         }
+    }
 
 
     //    通过反射执行方法
