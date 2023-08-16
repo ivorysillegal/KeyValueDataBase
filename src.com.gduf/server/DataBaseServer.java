@@ -250,7 +250,7 @@ public class DataBaseServer {
                 if (parameterTypes.length == 0)
                     feedback = method.invoke(command);
                 else
-                    feedback = method.invoke(o, (Object[]) parameterValues);
+                    feedback = method.invoke(o, (String[]) parameterValues);
 
 //                若有返回值就将返回值传回客户端 没返回值就返回1
                 if (feedback == null) {

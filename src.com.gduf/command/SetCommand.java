@@ -1,6 +1,7 @@
 package command;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -11,22 +12,24 @@ public class SetCommand {
     public SetCommand() {
     }
 
-    public static void sadd(String key, String... values) {
-        boolean contains = SET_DATA.containsKey(key);
-        if (!contains)
-            SET_DATA.put(key, new HashSet<>());
+    public void sadd(String key, HashMap<String, HashSet<String>> hashMap, String... values) {
+        boolean contains = hashMap.containsKey(key);
+        if (!contains) {
+            hashMap.put(key, new HashSet<>());
+        }
 
-        HashSet<String> set = SET_DATA.get(key);
+        HashSet<String> set = hashMap.get(key);
         set.addAll(Arrays.asList(values));
-        SET_DATA.put(key, set);
+        hashMap.put(key, set);
     }
 
-    public static String smembers(String key) {
-        boolean contain = SET_DATA.containsKey(key);
-        if (!contain)
+    public String smembers(String key, HashMap<String, HashSet<String>> hashMap) {
+        boolean contain = hashMap.containsKey(key);
+        if (!contain) {
             return "null set";
+        }
 
-        HashSet<String> set = SET_DATA.get(key);
+        HashSet<String> set = hashMap.get(key);
         Iterator<String> iterator = set.iterator();
         int i = 0;
         StringBuilder msg = new StringBuilder();
@@ -37,29 +40,52 @@ public class SetCommand {
         return msg.toString();
     }
 
-    public static String sismember(String key, String member) {
-        boolean contain = SET_DATA.containsKey(key);
-        if (!contain)
+    public String sismember(String key, String member, HashMap<String, HashSet<String>> hashMap) {
+        boolean contain = hashMap.containsKey(key);
+        if (!contain) {
             return "null set";
+        }
 
-        HashSet<String> set = SET_DATA.get(key);
+        HashSet<String> set = hashMap.get(key);
         boolean contains = set.contains(member);
-        if (contains) return "yes";
-        else return "no";
+        if (contains) {
+            return "yes";
+        } else {
+            return "no";
+        }
     }
 
-    public static String srem(String key, String number) {
-        boolean contain = SET_DATA.containsKey(key);
-        if (!contain)
+    public String srem(String key, String number, HashMap<String, HashSet<String>> hashMap) {
+        boolean contain = hashMap.containsKey(key);
+        if (!contain) {
             return "null set";
+        }
 
-        HashSet<String> set = SET_DATA.get(key);
-        if (set.contains(number))
+        HashSet<String> set = hashMap.get(key);
+        if (set.contains(number)) {
             set.remove(number);
-        else
+        } else {
             return "null";
+        }
         return "1";
     }
+
+    public void sadd(String key, String... values) {
+        sadd(key, SET_DATA, values);
+    }
+
+    public String smembers(String key) {
+        return smembers(key, SET_DATA);
+    }
+
+    public String sismember(String key, String member) {
+        return sismember(key, member, SET_DATA);
+    }
+
+    public String srem(String key, String number) {
+        return srem(key, number, SET_DATA);
+    }
+
 
 }
 

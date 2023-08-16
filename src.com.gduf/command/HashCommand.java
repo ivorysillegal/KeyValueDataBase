@@ -9,18 +9,18 @@ public class HashCommand {
 
     }
 
-    public static void hset(String key, String field, String value) {
-        HashMap<String, String> data = HASH_DATA.get(key);
-//            如果是第一次写入 或者之前清空过 data是null不能直接写入
-        if (data == null) data = new HashMap<>();
+    public void hset(String key, String field, String value, HashMap<String, HashMap<String, String>> hashMap) {
+        HashMap<String, String> data = hashMap.get(key);
+        if (data == null) {
+            data = new HashMap<>();
+        }
         data.put(field, value);
-//                把修改完后的数值重新写入文件 以便下一次写入文件
-        HASH_DATA.put(key, data);
+        hashMap.put(key, data);
     }
 
-    public static String hget(String key, String field) {
-        if (HASH_DATA.containsKey(key)) {
-            HashMap<String, String> data = HASH_DATA.get(key);
+    public String hget(String key, String field, HashMap<String, HashMap<String, String>> hashMap) {
+        if (hashMap.containsKey(key)) {
+            HashMap<String, String> data = hashMap.get(key);
             if (data == null) {
                 return "null HashMap";
             }
@@ -36,17 +36,17 @@ public class HashCommand {
         return "null HashMap";
     }
 
-    public static String hdel(String key, String field) {
-        if (HASH_DATA.containsKey(key)) {
-            HashMap<String, String> data = HASH_DATA.get(key);
-            if (data == null)
+    public String hdel(String key, String field, HashMap<String, HashMap<String, String>> hashMap) {
+        if (hashMap.containsKey(key)) {
+            HashMap<String, String> data = hashMap.get(key);
+            if (data == null) {
                 return "null HashMap";
+            }
 
             if (data.containsKey(field)) {
                 data.remove(field);
-                HASH_DATA.put(key, data);
+                hashMap.put(key, data);
                 return "1";
-//                把修改完后的数值重新写入文件 以便下一次写入文件
             } else {
                 return "null HashMap";
             }
@@ -55,9 +55,9 @@ public class HashCommand {
         }
     }
 
-    public static String hdel(String key) {
-        if (HASH_DATA.containsKey(key)) {
-            HashMap<String, String> data = HASH_DATA.get(key);
+    public String hdel(String key, HashMap<String, HashMap<String, String>> hashMap) {
+        if (hashMap.containsKey(key)) {
+            HashMap<String, String> data = hashMap.get(key);
             if (data == null) {
                 return "null HashMap";
             }
@@ -66,6 +66,22 @@ public class HashCommand {
         } else {
             return "null HashMap";
         }
+    }
+
+    public void hset(String key, String field, String value) {
+        hset(key, field, value, HASH_DATA);
+    }
+
+    public String hget(String key, String field) {
+        return hget(key, field, HASH_DATA);
+    }
+
+    public String hdel(String key, String field) {
+        return hdel(key, field, HASH_DATA);
+    }
+
+    public String hdel(String key) {
+        return hdel(key, HASH_DATA);
     }
 
 }

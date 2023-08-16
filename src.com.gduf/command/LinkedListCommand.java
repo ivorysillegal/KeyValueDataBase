@@ -1,5 +1,6 @@
 package command;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -11,27 +12,26 @@ public class LinkedListCommand {
     public LinkedListCommand() {
     }
 
-    public static void lpush(String key, String input) {
-        LinkedList<String> value = LINKED_LIST_DATA.get(key);
+    public void lpush(String key, String input, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
         if (value == null) {
             value = new LinkedList<>();
         }
         value.add(0, input);
-        LINKED_LIST_DATA.put(key, value);
+        hashMap.put(key, value);
     }
 
-    public static void rpush(String key, String input) {
-        LinkedList<String> value = LINKED_LIST_DATA.get(key);
+    public void rpush(String key, String input, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
         if (value == null) {
             value = new LinkedList<>();
         }
-
         value.add(input);
-        LINKED_LIST_DATA.put(key, value);
+        hashMap.put(key, value);
     }
 
-    public static String range(String key, String start, String end) {
-        LinkedList<String> value = LINKED_LIST_DATA.get(key);
+    public String range(String key, String start, String end, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
         if (value == null) {
             System.out.println("This LinkedList is null");
             return "null";
@@ -47,49 +47,73 @@ public class LinkedListCommand {
         return msg.toString();
     }
 
-    public static String len(String key) {
-        LinkedList<String> value = LINKED_LIST_DATA.get(key);
-        if (value == null)
+    public String len(String key, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
+        if (value == null) {
             return "null LinkedList";
-        else
-            return "len is " + value.size();
-    }
-
-    public static String lpop(String key) {
-        if (LINKED_LIST_DATA.containsKey(key)) {
-            LinkedList<String> value = LINKED_LIST_DATA.get(key);
-            if (value == null)
-                return "null LinkedList";
-            String del = value.pop();
-            LINKED_LIST_DATA.put(key, value);
-            return "1";
         } else {
-            return "null LinkedList";
+            return "len is " + value.size();
         }
     }
 
-
-    public static String rpop(String key) {
-        if (LINKED_LIST_DATA.containsKey(key)) {
-            LinkedList<String> value = LINKED_LIST_DATA.get(key);
-            if (value == null)
-                return "null LinkedList";
-
-            value.removeLast();
-            LINKED_LIST_DATA.put(key, value);
-            return "1";
-        } else
-            return "0";
+    public String lpop(String key, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
+        if (value == null) {
+            return "null LinkedList";
+        }
+        String del = value.poll();
+        hashMap.put(key, value);
+        return "1";
     }
 
-    public static String idel(String key) {
-        LinkedList<String> value = LINKED_LIST_DATA.get(key);
-        if (value == null)
+    public String rpop(String key, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
+        if (value == null) {
             return "null LinkedList";
+        }
+
+        value.pollLast();
+        hashMap.put(key, value);
+        return "1";
+    }
+
+    public String idel(String key, HashMap<String, LinkedList<String>> hashMap) {
+        LinkedList<String> value = hashMap.get(key);
+        if (value == null) {
+            return "null LinkedList";
+        }
 
         value.clear();
-        LINKED_LIST_DATA.put(key, value);
+        hashMap.put(key, value);
         return "1";
+    }
+
+    public void lpush(String key, String input) {
+        lpush(key, input, LINKED_LIST_DATA);
+    }
+
+    public void rpush(String key, String input) {
+        rpush(key, input, LINKED_LIST_DATA);
+    }
+
+    public String range(String key, String start, String end) {
+        return range(key, start, end, LINKED_LIST_DATA);
+    }
+
+    public String len(String key) {
+        return len(key, LINKED_LIST_DATA);
+    }
+
+    public String lpop(String key) {
+        return lpop(key, LINKED_LIST_DATA);
+    }
+
+    public String rpop(String key) {
+        return rpop(key, LINKED_LIST_DATA);
+    }
+
+    public String idel(String key) {
+        return idel(key, LINKED_LIST_DATA);
     }
 
 }
