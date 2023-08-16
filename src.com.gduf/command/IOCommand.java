@@ -1,11 +1,14 @@
 package command;
 
 import java.io.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static server.DataBaseServer.logger;
 import static server.FileInitialization.*;
 
 //目前思路：
@@ -26,11 +29,12 @@ public class IOCommand {
             if (dataType.isInstance(loadedData)) {
                 hashMap = dataType.cast(loadedData);
             } else {
-                System.err.println("类型分配错误");
+                org.tinylog.Logger.warn("类型分配错误");
+                logger.error("data cast error");
             }
             objectIn.close();
         } catch (EOFException e) {
-            System.out.println(dataType + "类型存储文件为空");
+            logger.info("blank file");
             hashMap = new HashMap<>();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -61,7 +65,7 @@ public class IOCommand {
 
 
     //    专门面向DATA_PATH数组
-    public static LinkedHashMap<String, String> loadData(String path, LinkedHashMap<String,String> linkedHashMap) {
+    public static LinkedHashMap<String, String> loadData(String path, LinkedHashMap<String, String> linkedHashMap) {
         ObjectInputStream objectIn = null;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
@@ -100,7 +104,7 @@ public class IOCommand {
 //                在try-with-resources的情况下 用完会自动关流
         ) {
             if (hashMap == null) {
-                hashMap = new HashMap<>();
+                return;
             }
             objectOut.writeObject(hashMap);
         } catch (EOFException e) {
@@ -134,7 +138,8 @@ public class IOCommand {
     //    后台保存指令
     public static void bgsave() {
         if (saving) {
-            System.out.println("另一个后台保存正在执行中");
+            org.tinylog.Logger.warn("另一个后台保存正在执行中");
+            logger.warn("bgsave is already working");
             return;
         }
         saving = true;
@@ -146,9 +151,11 @@ public class IOCommand {
 //        Lambda表达式
         new Thread(() -> {
             try {
-                System.out.println("正在后台保存中");
+                org.tinylog.Logger.info("正在保存中");
+                logger.info("bgsaving......");
                 save();
-                System.out.println("后台保存成功");
+                logger.info("bgsave success");
+                org.tinylog.Logger.info("后台保存成功");
             } finally {
                 saving = false;
             }
@@ -168,7 +175,8 @@ public class IOCommand {
         for (Map.Entry<String, String> stringEntry : DATA_PATH.entrySet()) {
             delFile(stringEntry.getValue());
         }
-        System.out.println("文件内容已清空");
+        logger.info("flushdb success");
+        org.tinylog.Logger.info("数据库文件已清空");
     }
 
     //    删除指令
@@ -181,36 +189,36 @@ public class IOCommand {
     }
 
 //    删除单独类型的文件 TBD
-//    public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
-//        for (int i = 0; i < DATA_PATH.size(); i++) {
-//            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
-//                try {
-//                    delFile(DATA_PATH.get(i));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    System.out.println("删除特定类型文件出错");
-//                }
-//            }
-//        }
-//    }
+    public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
+        for (int i = 0; i < DATA_PATH.size(); i++) {
+            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
+                try {
+                    delFile(DATA_PATH.get(i));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("删除特定类型文件出错");
+                }
+            }
+        }
+    }
 
-//    private static boolean isSameHashMapType(HashMap<?, ?> hashMap1, HashMap<?, ?> hashMap2) {
-//        Type type1 = hashMap1.getClass().getGenericSuperclass();
-//        Type type2 = hashMap2.getClass().getGenericSuperclass();
-//        if (type1 instanceof ParameterizedType && type2 instanceof ParameterizedType) {
-//            ParameterizedType paramType1 = (ParameterizedType) type1;
-//            ParameterizedType paramType2 = (ParameterizedType) type2;
-//            Type[] actualTypeArguments1 = paramType1.getActualTypeArguments();
-//            Type[] actualTypeArguments2 = paramType2.getActualTypeArguments();
-//            // 判断键的类型和值的类型是否相同
-//            if (actualTypeArguments1.length == 2 && actualTypeArguments2.length == 2) {
-//                return actualTypeArguments1[0].equals(actualTypeArguments2[0]) &&
-//                        actualTypeArguments1[1].equals(actualTypeArguments2[1]);
-//            }
-//        }
-//
-//        return false;
-//    }
+    private static boolean isSameHashMapType(HashMap<?, ?> hashMap1, HashMap<?, ?> hashMap2) {
+        Type type1 = hashMap1.getClass().getGenericSuperclass();
+        Type type2 = hashMap2.getClass().getGenericSuperclass();
+        if (type1 instanceof ParameterizedType && type2 instanceof ParameterizedType) {
+            ParameterizedType paramType1 = (ParameterizedType) type1;
+            ParameterizedType paramType2 = (ParameterizedType) type2;
+            Type[] actualTypeArguments1 = paramType1.getActualTypeArguments();
+            Type[] actualTypeArguments2 = paramType2.getActualTypeArguments();
+            // 判断键的类型和值的类型是否相同
+            if (actualTypeArguments1.length == 2 && actualTypeArguments2.length == 2) {
+                return actualTypeArguments1[0].equals(actualTypeArguments2[0]) &&
+                        actualTypeArguments1[1].equals(actualTypeArguments2[1]);
+            }
+        }
+
+        return false;
+    }
 
 
 }

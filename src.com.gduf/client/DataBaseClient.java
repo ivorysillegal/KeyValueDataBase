@@ -11,23 +11,27 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
+import static server.DataBaseServer.logger;
 import static server.FileInitialization.HOST_NAME;
 import static server.FileInitialization.PORT;
 
 public class DataBaseClient {
 
-    protected static int  mainReturnValue;
+    protected static int mainReturnValue;
+
     //    启动客户端的方法
     public void startClient() {
 
 //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // 在这里执行你希望在程序退出前保存数据的操作
-            if (!(mainReturnValue == 111)){
+            if (!(mainReturnValue == 111)) {
                 try {
                     IOCommand.save();
-                    System.out.println("程序即将退出，保存数据并进行清理操作。");
-                } catch (NullPointerException e){}
+                    org.tinylog.Logger.info("程序即将退出，保存数据并进行清理操作。");
+                    logger.warn("client disconnecting");
+                } catch (NullPointerException e) {
+                }
             }
         }));
 
@@ -39,7 +43,8 @@ public class DataBaseClient {
             try {
                 socketChannel = SocketChannel.open(new InetSocketAddress(HOST_NAME, Integer.parseInt(PORT)));
             } catch (ConnectException e) {
-                System.out.println("未启动服务器 请启动服务器后重试");
+                org.tinylog.Logger.warn("未启动服务器 请启动服务器后重试");
+                logger.warn("server disconnected");
                 mainReturnValue = 111;
                 System.exit(mainReturnValue);
             }
@@ -47,7 +52,7 @@ public class DataBaseClient {
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
         } catch (IOException e) {
-            System.out.println("服务器连接处出错");
+            org.tinylog.Logger.error("未启动服务器 请启动服务器后重试");
             e.printStackTrace();
         }
 
@@ -58,8 +63,8 @@ public class DataBaseClient {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();
-            if(msg.equals("exit")){
-                System.out.println("客户端即将断开");
+            if (msg.equals("exit")) {
+                org.tinylog.Logger.warn("未启动服务器 请启动服务器后重试");
                 try {
                     selector.close();
                     socketChannel.close();
@@ -72,7 +77,7 @@ public class DataBaseClient {
                 try {
                     socketChannel.write(Charset.forName("UTF-8").encode(msg));
                 } catch (IOException e) {
-                    System.out.println("输出信息时出错");
+                    org.tinylog.Logger.error("未启动服务器 请启动服务器后重试");
                     e.printStackTrace();
                 }
             }

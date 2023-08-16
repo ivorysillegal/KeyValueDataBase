@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.Logger;
 
 import static command.IOCommand.bgsave;
@@ -29,7 +30,7 @@ public class DataBaseServer {
     public static final int corePoolSize = 1;
     public static final int nThreads = 10;
     //    设置执行程序的和定时任务的线程池大小
-    private static final Logger logger = LogManager.getLogger(DataBaseServer.class);
+    public static final Logger logger = LogManager.getLogger(DataBaseServer.class);
 
 
     public static void main(String[] args) throws IOException {
@@ -57,7 +58,8 @@ public class DataBaseServer {
                 executorService.shutdown();
             // 在这里执行你希望在程序退出前保存数据的操作
             IOCommand.save();
-            System.out.println("程序即将退出，保存数据并进行清理操作。");
+            org.tinylog.Logger.info("程序即将退出，保存数据并进行清理操作。");
+            logger.info("server disconnected");
         }));
 
 //        启动服务器 注册通道 等待连接
@@ -66,7 +68,8 @@ public class DataBaseServer {
         serverSocketChannel.bind(new InetSocketAddress(Integer.parseInt(PORT)));
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-        System.out.println("服务器启动成功");
+        org.tinylog.Logger.info("服务器启动成功");
+        logger.info("server successfully connected");
 //        至此 已经成功启动服务器 下方则是等待客户端的连接
 
 //        空转等待新的连接
@@ -77,17 +80,23 @@ public class DataBaseServer {
             int readyChannels = selector.select();
             if (readyChannels == 0)
                 continue;
+            logger.debug("get readyChannel");
 
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
             Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
 
             while (keyIterator.hasNext()) {
                 final SelectionKey key = keyIterator.next();
+                logger.debug("get Iterator");
                 keyIterator.remove();
                 if (key.isAcceptable()) {
+                    logger.debug("get key to accept");
                     acceptOperator(serverSocketChannel, selector, executorService);
+                    logger.debug("key was accepted");
                 } else if (key.isReadable()) {
+                    logger.debug("get key read");
                     readOperator(selector, key, executorService);
+                    logger.debug("key was read");
                 }
             }
         }
@@ -98,21 +107,23 @@ public class DataBaseServer {
 //        处理来自读取的操作
 
         if (!clientChannel.isConnected()) {
-            System.out.println("连接已断开，关闭通道并取消注册。");
+            org.tinylog.Logger.info("连接已断开，关闭通道并取消此注册。");
+            logger.warn("client disconnected");
             try {
                 clientChannel.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
+            logger.warn("finish cancelling client-key");
         } else {
             executorService.submit(() -> {
 //            执行具体逻辑
                 try {
                     handleReadData(clientChannel, selector, key);
                 } catch (IOException e) {
-                    System.out.println("执行读的操作的时候出错");
-                    e.printStackTrace();
+                    org.tinylog.Logger.error("执行读操作错误");
+                    logger.error("read error");
                 }
             });
         }
@@ -130,7 +141,8 @@ public class DataBaseServer {
             try {
                 handleClientConnection(clientChannel);
             } catch (IOException e) {
-                System.out.println("服务器已连接上 输出信息错误！");
+                org.tinylog.Logger.error("服务器已连接上 输出信息错误！");
+                logger.warn("client connected and read error");
                 e.printStackTrace();
             }
         });
@@ -156,12 +168,14 @@ public class DataBaseServer {
 
 //                处理客户端关闭连接，服务器端在尝试读取时发现连接已被重置，从而引发的异常
         } catch (IOException e) {
+            org.tinylog.Logger.info("有连接已断开");
             readLength = -1;
         }
         if (readLength == -1) {
             selectionKey.cancel();
             selectionKey.attach("DISCONNECTED");
-            System.out.println("客户端断开连接 后台保存数据");
+            org.tinylog.Logger.info("客户端断开连接 后台保存数据");
+            logger.info("client disconnected");
             bgsave();
         }
         if (!"DISCONNECTED".equals(selectionKey.attachment()))
@@ -173,7 +187,7 @@ public class DataBaseServer {
             byteBuffer.flip();
 //            读取内容
             msg.append(Charset.forName("UTF-8").decode(byteBuffer));
-
+            logger.info("reading msg");
             String command = null;
             String[] commands = msg.toString().split(" ");
             int i;
@@ -188,8 +202,6 @@ public class DataBaseServer {
                     break;
                 }
 //            i 则表示命令对应的数据类型
-//            重名的命令处理  TBD
-//            看是否能获取到相同名字的命令
             }
 
             boolean execute = false;
@@ -200,6 +212,9 @@ public class DataBaseServer {
             else if (command != null) {
 //                进入此if分支语句则表示 有存在输入的命令
 
+                org.tinylog.Logger.info("命令输入正确");
+                logger.warn("input correct");
+
                 int length = commands.length;
                 String[] parameterValues = new String[length - 1];
                 System.arraycopy(commands, 1, parameterValues, 0, parameterValues.length);
@@ -208,6 +223,8 @@ public class DataBaseServer {
 
                 try {
                     //            i 则表示命令对应的数据类型
+                    org.tinylog.Logger.info("正在执行方法");
+                    logger.info("executing methods");
                     execute = Execute(i, readyChannel, parameterValues, command);
 
                 } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
@@ -216,8 +233,16 @@ public class DataBaseServer {
                     readyChannel.write(Charset.forName("UTF-8").encode("调用方法形参出现错误"));
                 }
             }
-            if (!execute)
+            if (!execute) {
                 readyChannel.write(Charset.forName("UTF-8").encode("参数输入错误 请重新输入"));
+                logger.info("execute failed");
+                org.tinylog.Logger.info("方法执行失败");
+                org.tinylog.Logger.info("参数输入错误");
+            }
+            else {
+                logger.info("execute success");
+                org.tinylog.Logger.info("方法执行成功");
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static server.DataBaseServer.logger;
 import static server.FileInitialization.*;
 
 public class DataCommand {
@@ -19,12 +20,12 @@ public class DataCommand {
 
     }
 
-//    设置过期时间
-    public static void expired(String key, String delay) {
+    //    设置过期时间
+    public static String expired(String key, String delay) {
         int delayTime = Integer.parseInt(delay);
         int type = keyIsExist(key);
         if (type == -1) {
-            System.out.println("没有这个key");
+            return "null";
         } else {
             switch (type) {
                 case 1:
@@ -37,10 +38,10 @@ public class DataCommand {
                     scheduleExpiryCheck(SET_DATA, key, delayTime);
             }
         }
-
+        return "1";
     }
 
-//    判断键是否存在并且判断类型
+    //    判断键是否存在并且判断类型
     private static int keyIsExist(String key) {
         if (STRING_DATA.containsKey(key)) {
             return 1;
@@ -74,13 +75,14 @@ public class DataCommand {
         } else return -1;
     }
 
-//    查看剩余过期时间
-    public static long ddl(String key) {
+    //    查看剩余过期时间
+    public static String ddl(String key) {
         long remainTime = remainTime(key);
         if (remainTime == -1) {
-            System.out.println("没有这个键");
-            return -1;
-        } else return remainTime;
+            org.tinylog.Logger.info("没有此键");
+            logger.info("check error");
+            return "null";
+        } else return String.valueOf(remainTime);
     }
 
 }

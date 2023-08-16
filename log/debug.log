@@ -1,0 +1,374 @@
+2023-08-16 15:53:26 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:44) ]
+INFO:server disconnected
+2023-08-16 15:53:26 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:74) ]
+INFO:server successfully connected
+2023-08-16 16:02:17 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:72) ]
+INFO:server successfully connected
+2023-08-16 16:02:19 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:19 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:19 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:93) ]
+DEBUG:get key to accept
+2023-08-16 16:02:19 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:95) ]
+DEBUG:key was accepted
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:22 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:02:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:22 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:02:22 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:27 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:02:27 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:27 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:02:27 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:02:29 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:02:29 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:02:29 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:02:29 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:04:33 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:72) ]
+INFO:server successfully connected
+2023-08-16 16:04:34 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:04:34 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:04:34 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:93) ]
+DEBUG:get key to accept
+2023-08-16 16:04:34 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:95) ]
+DEBUG:key was accepted
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:04:37 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:04:37 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:04:37 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:04:37 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:231) ]
+INFO:execute success
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:04:37 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:04:53 下午 [Thread: Thread-2][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:155) ]
+INFO:bgsaving......
+2023-08-16 16:04:53 下午 [Thread: Thread-2][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:157) ]
+INFO:bgsave success
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:03 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:03 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:03 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:05:03 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:05:03 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:231) ]
+INFO:execute success
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:08 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:08 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:08 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:05:08 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:05:08 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:231) ]
+INFO:execute success
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:18 下午 [Thread: pool-3-thread-8][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:18 下午 [Thread: pool-3-thread-8][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:05:18 下午 [Thread: pool-3-thread-8][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:05:18 下午 [Thread: pool-3-thread-8][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:231) ]
+INFO:execute success
+2023-08-16 16:05:23 下午 [Thread: Thread-3][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:155) ]
+INFO:bgsaving......
+2023-08-16 16:05:23 下午 [Thread: Thread-3][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:157) ]
+INFO:bgsave success
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:05:24 下午 [Thread: pool-3-thread-10][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:05:24 下午 [Thread: pool-3-thread-10][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:05:24 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:05:24 下午 [Thread: pool-3-thread-10][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:05:24 下午 [Thread: pool-3-thread-10][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:231) ]
+INFO:execute success
+2023-08-16 16:06:46 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:72) ]
+INFO:server successfully connected
+2023-08-16 16:06:46 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:06:46 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:06:46 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:93) ]
+DEBUG:get key to accept
+2023-08-16 16:06:46 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:95) ]
+DEBUG:key was accepted
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:06:52 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:06:52 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:06:52 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:06:52 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:06:52 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: command.IOCommand.del(IOCommand.java:178) ]
+INFO:flushdb success
+2023-08-16 16:06:52 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:241) ]
+INFO:execute success
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:07:00 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:07:00 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:07:05 下午 [Thread: Thread-2][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:155) ]
+INFO:bgsaving......
+2023-08-16 16:07:05 下午 [Thread: Thread-2][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:157) ]
+INFO:bgsave success
+2023-08-16 16:07:35 下午 [Thread: Thread-3][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:155) ]
+INFO:bgsaving......
+2023-08-16 16:07:35 下午 [Thread: Thread-3][ Class:server.DataBaseServer Method: command.IOCommand.lambda$bgsave$0(IOCommand.java:157) ]
+INFO:bgsave success
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:07:44 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:07:44 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:07:44 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:218) ]
+WARN:input correct
+2023-08-16 16:07:44 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:229) ]
+INFO:executing methods
+2023-08-16 16:07:44 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: command.IOCommand.del(IOCommand.java:178) ]
+INFO:flushdb success
+2023-08-16 16:07:44 下午 [Thread: pool-3-thread-6][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:241) ]
+INFO:execute success
+2023-08-16 16:13:09 下午 [Thread: main][ Class:server.DataBaseServer Method: command.IOCommand.loadData(IOCommand.java:37) ]
+INFO:blank file
+2023-08-16 16:13:09 下午 [Thread: main][ Class:server.DataBaseServer Method: command.IOCommand.loadData(IOCommand.java:37) ]
+INFO:blank file
+2023-08-16 16:13:09 下午 [Thread: main][ Class:server.DataBaseServer Method: command.IOCommand.loadData(IOCommand.java:37) ]
+INFO:blank file
+2023-08-16 16:13:09 下午 [Thread: main][ Class:server.DataBaseServer Method: command.IOCommand.loadData(IOCommand.java:37) ]
+INFO:blank file
+2023-08-16 16:13:10 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:72) ]
+INFO:server successfully connected
+2023-08-16 16:13:17 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:13:17 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:13:17 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:93) ]
+DEBUG:get key to accept
+2023-08-16 16:13:17 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:95) ]
+DEBUG:key was accepted
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:13:18 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:13:18 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:13:18 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:216) ]
+WARN:input correct
+2023-08-16 16:13:18 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:227) ]
+INFO:executing methods
+2023-08-16 16:13:18 下午 [Thread: pool-3-thread-2][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:243) ]
+INFO:execute success
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:83) ]
+DEBUG:get readyChannel
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:90) ]
+DEBUG:get Iterator
+2023-08-16 16:13:22 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:190) ]
+INFO:reading msg
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:97) ]
+DEBUG:get key read
+2023-08-16 16:13:22 下午 [Thread: main][ Class:server.DataBaseServer Method: server.DataBaseServer.main(DataBaseServer.java:99) ]
+DEBUG:key was read
+2023-08-16 16:13:22 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:216) ]
+WARN:input correct
+2023-08-16 16:13:22 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:227) ]
+INFO:executing methods
+2023-08-16 16:13:22 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: command.IOCommand.del(IOCommand.java:178) ]
+INFO:flushdb success
+2023-08-16 16:13:22 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: server.DataBaseServer.handleReadData(DataBaseServer.java:243) ]
+INFO:execute success
