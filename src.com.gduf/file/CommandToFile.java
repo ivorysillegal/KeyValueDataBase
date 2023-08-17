@@ -77,27 +77,7 @@ public class CommandToFile {
         write("src.com.gduf\\data\\PathData.properties", linkedHashMap);
 
     }
-
-
-    public static void write(String filePath, ArrayList<HashMap<?, ?>> hashMapArrayList) throws IOException {
-        OutputStream fileOutputStream = new FileOutputStream(filePath);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(hashMapArrayList);
-    }
-
-    public static void write(String filePath, HashMap<String, String> hashMap) throws IOException {
-        OutputStream fileOutputStream = new FileOutputStream(filePath);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(hashMap);
-    }
-
-    public static void write(String filePath, HashMap<String, String>[] hashMap) throws IOException {
-        OutputStream fileOutputStream = new FileOutputStream(filePath);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(hashMap);
-    }
-
-    public static void write(String filePath, LinkedHashMap<String, String> hashMap) throws IOException {
+    public static void write(String filePath, Object hashMap) throws IOException {
         OutputStream fileOutputStream = new FileOutputStream(filePath);
         ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
         outputStream.writeObject(hashMap);
