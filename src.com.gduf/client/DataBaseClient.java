@@ -14,6 +14,7 @@ import java.util.Scanner;
 import static server.DataBaseServer.logger;
 import static server.FileInitialization.HOST_NAME;
 import static server.FileInitialization.PORT;
+import static message.SecureMessage.decode;
 
 public class DataBaseClient {
 

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static client.DataBaseClient.mainReturnValue;
+import static message.SecureMessage.decode;
 import static server.DataBaseServer.logger;
 
 public class ClientThread implements Runnable {
@@ -68,8 +69,16 @@ public class ClientThread implements Runnable {
             byteBuffer.flip();
             msg += Charset.forName("UTF-8").decode(byteBuffer);
         }
+        if (msg.length() > 0) {
+            String originalMessage = null;
+            try {
+                originalMessage = decode(msg);
+            } catch (Exception e) {
+                logger.error("sending message error");
+                org.tinylog.Logger.error("通讯发生错误");
+            }
+            System.out.println(originalMessage);
+        }
         readyChannel.register(selector, SelectionKey.OP_READ);
-        if (msg.length() > 0)
-            System.out.println(msg);
     }
 }

@@ -99,6 +99,8 @@ public class IOCommand {
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             linkedList = (LinkedList<String>) objectIn.readObject();
+        } catch (EOFException e1){
+            linkedList = new LinkedList<>();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
