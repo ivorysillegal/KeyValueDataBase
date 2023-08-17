@@ -3,10 +3,12 @@ package server;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 import static command.IOCommand.loadData;
+import static server.DataBaseServer.*;
 
 public class FileInitialization {
     public static HashMap<String, String>[] METHODS;
@@ -35,7 +37,7 @@ public class FileInitialization {
     public static HashMap<String, HashMap<String, String>> HASH_DATA;
     public static HashMap<String, HashSet<String>> SET_DATA;
 
-    public static final int TYPE = 5;
+    public static final String TYPE;
     public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
     public static LinkedHashMap<String, String> DATA_PATH;
     public static LinkedList<String> KEYS_VALUE;
@@ -52,6 +54,7 @@ public class FileInitialization {
             e.printStackTrace();
         }
 
+        TYPE = properties.getProperty("TYPE");
         METHODS_PATH = properties.getProperty("METHODS_PATH");
         TYPE_PATH = properties.getProperty("TYPE_PATH");
         STRING_DATA_PATH = properties.getProperty("STRING_DATA_PATH");
@@ -84,16 +87,25 @@ public class FileInitialization {
         } else
             org.tinylog.Logger.info("Log4j日志系统加载失败");
 
-
-
-
         DATA_PATH = loadData(DATA_PATH_PATH, DATA_PATH);
         TYPE_ARRAY = loadData(TYPE_PATH);
-        METHODS = loadData(METHODS_PATH, TYPE);
+        METHODS = loadData(METHODS_PATH, Integer.parseInt(TYPE));
         STRING_DATA = loadData(STRING_DATA_PATH, (Class<HashMap<String, String>>) (Class<?>) HashMap.class);
         LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
         HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
         SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
-        KEYS_VALUE = loadData(KEYS_VALUE_PATH,KEYS_VALUE);
+        KEYS_VALUE = loadData(KEYS_VALUE_PATH, KEYS_VALUE);
+
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("src.com.gduf\\data\\MissionConfig.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BGSAVE_SECONDS = Integer.parseInt(properties.getProperty("BGSAVE_SECONDS"));
+        START_DELAY = Integer.parseInt(properties.getProperty("START_DELAY"));
+        corePoolSize = Integer.parseInt(properties.getProperty("corePoolSize"));
+        nThreads = Integer.parseInt(properties.getProperty("nThreads"));
     }
+
 }

@@ -18,8 +18,8 @@ public class IOCommand {
     //    面向4种数据类型的加载方法
     public static <T, U> HashMap<T, U> loadData(String path, Class<HashMap<T, U>> dataType) {
         HashMap<T, U> hashMap = null;
-        Object loadedData = null;
-        ObjectInputStream objectIn = null;
+        Object loadedData;
+        ObjectInputStream objectIn;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             loadedData = objectIn.readObject();
@@ -47,7 +47,7 @@ public class IOCommand {
     //    专门面向METHODS数组
     public static HashMap<String, String>[] loadData(String path, int type) {
         HashMap<String, String>[] hashMaps = null;
-        ObjectInputStream objectIn = null;
+        ObjectInputStream objectIn;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             hashMaps = (HashMap<String, String>[]) objectIn.readObject();
@@ -63,7 +63,7 @@ public class IOCommand {
 
     //    专门面向DATA_PATH数组
     public static LinkedHashMap<String, String> loadData(String path, LinkedHashMap<String, String> linkedHashMap) {
-        ObjectInputStream objectIn = null;
+        ObjectInputStream objectIn;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             linkedHashMap = (LinkedHashMap<String, String>) objectIn.readObject();
@@ -80,7 +80,7 @@ public class IOCommand {
     //    面向类型数据文件（TYPE_PATH）
     public static ArrayList<HashMap<?, ?>> loadData(String path) {
         ArrayList<HashMap<?, ?>> hashMaps = null;
-        ObjectInputStream objectIn = null;
+        ObjectInputStream objectIn;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             hashMaps = (ArrayList<HashMap<?, ?>>) objectIn.readObject();
@@ -95,7 +95,7 @@ public class IOCommand {
 
     //    面向验证键的唯一性的链表（KEYS_VALUE）
     public static LinkedList<String> loadData(String path,LinkedList<String> linkedList) {
-        ObjectInputStream objectIn = null;
+        ObjectInputStream objectIn;
         try {
             objectIn = new ObjectInputStream(new FileInputStream(path));
             linkedList = (LinkedList<String>) objectIn.readObject();
@@ -202,20 +202,8 @@ public class IOCommand {
         }
     }
 
-//    删除单独类型的文件 TBD
-    public static void flushdb(HashMap<?, ?> hashMap, ArrayList<HashMap<?, ?>> hashMapArray) {
-        for (int i = 0; i < DATA_PATH.size(); i++) {
-            if (isSameHashMapType(hashMap, hashMapArray.get(i))) {
-                try {
-                    delFile(DATA_PATH.get(i));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("删除特定类型文件出错");
-                }
-            }
-        }
-    }
 
+//    费案 本用于删除单种类型的文件
     private static boolean isSameHashMapType(HashMap<?, ?> hashMap1, HashMap<?, ?> hashMap2) {
         Type type1 = hashMap1.getClass().getGenericSuperclass();
         Type type2 = hashMap2.getClass().getGenericSuperclass();

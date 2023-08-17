@@ -1,13 +1,9 @@
 package message;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
 import java.util.Base64;
 
 public class SecureMessage {
@@ -52,13 +48,6 @@ public class SecureMessage {
         }
 
         return new String[]{encryptedMessage, signature};
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        String encode = encode("我是你爹");
-        String decode = decode(encode);
-        System.out.println(decode);
     }
 
     public static String encode(String originalMessage) throws Exception {

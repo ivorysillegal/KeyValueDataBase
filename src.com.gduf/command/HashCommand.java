@@ -3,7 +3,6 @@ package command;
 import java.util.HashMap;
 
 import static server.FileInitialization.*;
-import static server.FileInitialization.LINKED_LIST_DATA;
 
 public class HashCommand {
     public HashCommand() {

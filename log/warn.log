@@ -1,0 +1,2 @@
+2023-08-17 16:45:27 下午 [Thread: pool-3-thread-4][ Class:server.DataBaseServer Method: command.IOCommand.bgsave(IOCommand.java:156) ]
+WARN:bgsave is already working

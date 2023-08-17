@@ -5,8 +5,6 @@ import command.LinkedListCommand;
 import command.SetCommand;
 import command.StringCommand;
 
-import java.util.HashMap;
-
 public class KeyValueDataBase {
 
     public static StringCommand String() {

@@ -16,9 +16,9 @@ public class WriteProperties {
         properties.setProperty("HASH_DATA_PATH", "src.com.gduf\\data\\key_value_data\\HashData.properties");
         properties.setProperty("SET_DATA_PATH", "src.com.gduf\\data\\key_value_data\\SetData.properties");
         properties.setProperty("DATA_PATH_PATH", "src.com.gduf\\data\\PathData.properties");
-        properties.setProperty("KEYS_VALUE_PATH","src.com.gduf\\data\\key_value_data\\KeysData.properties");
+        properties.setProperty("KEYS_VALUE_PATH", "src.com.gduf\\data\\key_value_data\\KeysData.properties");
 
-        properties.setProperty("HOST_NAME","127.0.0.1");
+        properties.setProperty("HOST_NAME", "127.0.0.1");
         properties.setProperty("PORT", "8080");
         properties.setProperty("STRING_CLASSNAME", "command.StringCommand");
         properties.setProperty("LINKED_LIST_CLASSNAME", "command.LinkedListCommand");
@@ -27,10 +27,27 @@ public class WriteProperties {
         properties.setProperty("IO_CLASSNAME", "command.IOCommand");
         properties.setProperty("DATA_CLASSNAME", "command.DataCommand");
 
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("src.com.gduf\\data\\MissionConfig.properties");
+            properties.store(fileOutputStream, "Mission Configuration Properties");
+            fileOutputStream.close();
+            System.out.println("1");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        Properties properties1 = new Properties();
+
+        properties1.setProperty("BGSAVE_SECONDS", "30");
+        properties1.setProperty("START_DELAY", "20");
+        properties1.setProperty("corePoolSize", "1");
+        properties1.setProperty("nThreads", "10");
+
         // 将 Properties 对象保存到文件
         try {
             FileOutputStream fileOutputStream = new FileOutputStream("src.com.gduf\\data\\Config.properties");
-            properties.store(fileOutputStream, "Configuration Properties");
+            properties1.store(fileOutputStream, "Configuration Properties");
             fileOutputStream.close();
             System.out.println("1");
         } catch (IOException e) {

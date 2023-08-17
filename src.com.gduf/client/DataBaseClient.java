@@ -11,6 +11,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
+import static message.SecureMessage.encode;
 import static server.DataBaseServer.logger;
 import static server.FileInitialization.HOST_NAME;
 import static server.FileInitialization.PORT;
@@ -75,11 +76,13 @@ public class DataBaseClient {
                 }
             }
             if (msg.length() > 0) {
+                String wrappedMessage;
                 try {
-                    socketChannel.write(Charset.forName("UTF-8").encode(msg));
-                } catch (IOException e) {
-                    org.tinylog.Logger.error("未启动服务器 请启动服务器后重试");
-                    e.printStackTrace();
+                    wrappedMessage = encode(msg);
+                    socketChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
+                } catch (Exception e) {
+                    logger.error("sending message error");
+                    org.tinylog.Logger.error("通讯发生错误");
                 }
             }
         }
