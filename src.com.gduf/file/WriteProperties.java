@@ -16,6 +16,7 @@ public class WriteProperties {
         properties.setProperty("HASH_DATA_PATH", "src.com.gduf\\data\\key_value_data\\HashData.properties");
         properties.setProperty("SET_DATA_PATH", "src.com.gduf\\data\\key_value_data\\SetData.properties");
         properties.setProperty("DATA_PATH_PATH", "src.com.gduf\\data\\PathData.properties");
+        properties.setProperty("KEYS_VALUE_PATH","src.com.gduf\\data\\key_value_data\\KeysData.properties");
 
         properties.setProperty("HOST_NAME","127.0.0.1");
         properties.setProperty("PORT", "8080");

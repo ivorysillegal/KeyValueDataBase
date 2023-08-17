@@ -19,6 +19,7 @@ public class FileInitialization {
     public static final String HASH_DATA_PATH;
     public static final String SET_DATA_PATH;
     public static final String DATA_PATH_PATH;
+    public static final String KEYS_VALUE_PATH;
 
     public static final String HOST_NAME;
     public static final String PORT;
@@ -37,6 +38,7 @@ public class FileInitialization {
     public static final int TYPE = 5;
     public static ArrayList<HashMap<?, ?>> TYPE_ARRAY;
     public static LinkedHashMap<String, String> DATA_PATH;
+    public static LinkedList<String> KEYS_VALUE;
 
     static {
 
@@ -57,6 +59,7 @@ public class FileInitialization {
         HASH_DATA_PATH = properties.getProperty("HASH_DATA_PATH");
         SET_DATA_PATH = properties.getProperty("SET_DATA_PATH");
         DATA_PATH_PATH = properties.getProperty("DATA_PATH_PATH");
+        KEYS_VALUE_PATH = properties.getProperty("KEYS_VALUE_PATH");
         PORT = properties.getProperty("PORT");
         HOST_NAME = properties.getProperty("HOST_NAME");
 
@@ -91,5 +94,6 @@ public class FileInitialization {
         LINKED_LIST_DATA = loadData(LINKED_LIST_DATA_PATH, (Class<HashMap<String, LinkedList<String>>>) (Class<?>) HashMap.class);
         HASH_DATA = loadData(HASH_DATA_PATH, (Class<HashMap<String, HashMap<String, String>>>) (Class<?>) HashMap.class);
         SET_DATA = loadData(SET_DATA_PATH, (Class<HashMap<String, HashSet<String>>>) (Class<?>) HashMap.class);
+        KEYS_VALUE = loadData(KEYS_VALUE_PATH,KEYS_VALUE);
     }
 }

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 
+import static server.FileInitialization.KEYS_VALUE;
 import static server.FileInitialization.LINKED_LIST_DATA;
 
 public class LinkedListCommand {
@@ -88,12 +89,30 @@ public class LinkedListCommand {
         return "1";
     }
 
-    public void lpush(String key, String input) {
-        lpush(key, input, LINKED_LIST_DATA);
+    public String lpush(String key, String input) {
+        if (!KEYS_VALUE.contains(key)) {
+            lpush(key, input, LINKED_LIST_DATA);
+            return "1";
+        } else {
+            if ((LINKED_LIST_DATA.get(key)) != null) {
+                lpush(key, input, LINKED_LIST_DATA);
+                return "1";
+            } else
+                return "Duplicate Key";
+        }
     }
 
-    public void rpush(String key, String input) {
-        rpush(key, input, LINKED_LIST_DATA);
+    public String rpush(String key, String input) {
+        if (!KEYS_VALUE.contains(key)) {
+            rpush(key, input, LINKED_LIST_DATA);
+            return "1";
+        } else {
+            if ((LINKED_LIST_DATA.get(key)) != null) {
+                rpush(key, input, LINKED_LIST_DATA);
+                return "1";
+            } else
+                return "Duplicate Key";
+        }
     }
 
     public String range(String key, String start, String end) {

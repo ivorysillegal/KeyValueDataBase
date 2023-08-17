@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import static server.FileInitialization.KEYS_VALUE;
 import static server.FileInitialization.SET_DATA;
 
 public class SetCommand {
@@ -70,8 +71,17 @@ public class SetCommand {
         return "1";
     }
 
-    public void sadd(String key, String... values) {
-        sadd(key, SET_DATA, values);
+    public String sadd(String key, String... values) {
+        if (!KEYS_VALUE.contains(key)) {
+            sadd(key, SET_DATA, values);
+            return "1";
+        } else {
+            if ((SET_DATA.get(key)) != null) {
+                sadd(key, SET_DATA, values);
+                return "1";
+            } else
+                return "Duplicate Key";
+        }
     }
 
     public String smembers(String key) {

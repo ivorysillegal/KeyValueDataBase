@@ -11,6 +11,10 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.charset.Charset;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +22,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Logger;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import static command.IOCommand.bgsave;
 import static server.FileInitialization.*;
@@ -33,20 +40,39 @@ public class DataBaseServer {
     public static final Logger logger = LogManager.getLogger(DataBaseServer.class);
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
         load();
+        logger.info("file initialization success");
 //        使用FileInitialization类中的静态load方法
 //        使用静态方法的时候 加载了他的类 使其中的常量全部得以加载
 //        当调用一个类的静态方法时，会首先执行静态初始化块（静态代码块），然后再执行该方法
 //        并且静态代码块只会执行一次 完美符合加载常量的要求
 
+
+//        初始化报文相关
+        // 初始化密钥
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(128);
+        SecretKey secretKey = keyGen.generateKey();
+        // 初始化数字签名密钥
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+        keyPairGen.initialize(2048);
+        KeyPair keyPair = keyPairGen.generateKeyPair();
+        PrivateKey privateKey = keyPair.getPrivate();
+        logger.info("message register success");
+
+
         //        设置后台保存的定时任务
         ScheduledExecutorService bgSaver = Executors.newScheduledThreadPool(corePoolSize);
         bgSaver.scheduleAtFixedRate(IOCommand::bgsave, START_DELAY, BGSAVE_SECONDS, TimeUnit.SECONDS);
+        logger.debug("bgsave setting success");
+
 
         //        注册线程池
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
+        logger.debug("executorService register success");
+
 
         //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         //        注册钩子机制
@@ -61,6 +87,8 @@ public class DataBaseServer {
             org.tinylog.Logger.info("程序即将退出，保存数据并进行清理操作。");
             logger.info("server disconnected");
         }));
+        logger.info("ShutdownHook register success");
+
 
 //        启动服务器 注册通道 等待连接
         Selector selector = Selector.open();
@@ -238,8 +266,7 @@ public class DataBaseServer {
                 logger.info("execute failed");
                 org.tinylog.Logger.info("方法执行失败");
                 org.tinylog.Logger.info("参数输入错误");
-            }
-            else {
+            } else {
                 logger.info("execute success");
                 org.tinylog.Logger.info("方法执行成功");
             }

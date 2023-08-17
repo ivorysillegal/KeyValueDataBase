@@ -2,7 +2,8 @@ package command;
 
 import java.util.HashMap;
 
-import static server.FileInitialization.HASH_DATA;
+import static server.FileInitialization.*;
+import static server.FileInitialization.LINKED_LIST_DATA;
 
 public class HashCommand {
     public HashCommand() {
@@ -68,8 +69,17 @@ public class HashCommand {
         }
     }
 
-    public void hset(String key, String field, String value) {
-        hset(key, field, value, HASH_DATA);
+    public String hset(String key, String field, String value) {
+        if (!KEYS_VALUE.contains(key)) {
+            hset(key, field, value, HASH_DATA);
+            return "1";
+        } else {
+            if ((HASH_DATA.get(key)) != null) {
+                hset(key, field, value, HASH_DATA);
+                return "1";
+            } else
+                return "Duplicate Key";
+        }
     }
 
     public String hget(String key, String field) {

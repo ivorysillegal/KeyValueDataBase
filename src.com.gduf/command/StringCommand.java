@@ -3,6 +3,7 @@ package command;
 
 import java.util.HashMap;
 
+import static server.FileInitialization.KEYS_VALUE;
 import static server.FileInitialization.STRING_DATA;
 
 public class StringCommand {
@@ -11,7 +12,7 @@ public class StringCommand {
 
     }
 
-    public  String set(String key, String value, HashMap<String, String> hashMap) {
+    public String set(String key, String value, HashMap<String, String> hashMap) {
         hashMap.put(key, value);
         return "1";
     }
@@ -33,11 +34,17 @@ public class StringCommand {
     }
 
 
-
-
     public String set(String key, String value) {
-        String res = set(key, value, STRING_DATA);
-        return res;
+        if (!KEYS_VALUE.contains(key)) {
+            set(key, value, STRING_DATA);
+            return "1";
+        } else {
+            if ((STRING_DATA.get(key)) != null) {
+                set(key, value, STRING_DATA);
+                return "1";
+            } else
+                return "Duplicate Key";
+        }
     }
 
     public String get(String key) {

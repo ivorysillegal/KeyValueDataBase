@@ -3,10 +3,7 @@ package command;
 import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static server.DataBaseServer.logger;
 import static server.FileInitialization.*;
@@ -94,6 +91,21 @@ public class IOCommand {
             hashMaps = new ArrayList<>();
         }
         return hashMaps;
+    }
+
+    //    面向验证键的唯一性的链表（KEYS_VALUE）
+    public static LinkedList<String> loadData(String path,LinkedList<String> linkedList) {
+        ObjectInputStream objectIn = null;
+        try {
+            objectIn = new ObjectInputStream(new FileInputStream(path));
+            linkedList = (LinkedList<String>) objectIn.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (linkedList == null) {
+            linkedList = new LinkedList<>();
+        }
+        return linkedList;
     }
 
 
