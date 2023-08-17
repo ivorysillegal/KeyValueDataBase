@@ -24,6 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static command.IOCommand.bgsave;
+import static message.SecureMessage.decode;
 import static message.SecureMessage.encode;
 import static server.FileInitialization.*;
 
@@ -130,7 +131,7 @@ public class DataBaseServer {
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
             logger.warn("finish cancelling client-key");
         } else {
-            executorService.submit(() -> {
+//            executorService.submit(() -> {
 //            执行具体逻辑
                 try {
                     handleReadData(clientChannel, selector, key);
@@ -138,7 +139,7 @@ public class DataBaseServer {
                     org.tinylog.Logger.error("执行读操作错误");
                     logger.error("read error");
                 }
-            });
+//            });
         }
     }
 
@@ -165,15 +166,7 @@ public class DataBaseServer {
 
     private static void handleClientConnection(SocketChannel clientChannel) throws IOException {
         // 处理来自客户端的新的连接(已连接)-------连接上了之后执行什么的操作
-        String originalMessage = "此客户端已连接！";
-        String wrappedMessage;
-        try {
-            wrappedMessage = encode(originalMessage);
-            clientChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-        } catch (Exception e) {
-            logger.error("sending message error");
-            org.tinylog.Logger.error("通讯发生错误");
-        }
+        WriteToClient("此客户端已连接！",clientChannel);
     }
 
     private static void handleReadData(SocketChannel readyChannel, Selector selector, SelectionKey selectionKey) throws IOException {
@@ -209,9 +202,16 @@ public class DataBaseServer {
             byteBuffer.flip();
 //            读取内容
             msg.append(Charset.forName("UTF-8").decode(byteBuffer));
+            String s = msg.toString();
+            String originalMsg = null;
+            try {
+                originalMsg = decode(s);
+            } catch (Exception e) {
+                WriteToClient("接收命令错误",readyChannel);
+            }
             logger.info("reading msg");
             String command = null;
-            String[] commands = msg.toString().split(" ");
+            String[] commands = originalMsg.split(" ");
             int i;
 //        遍历数组里面的指令 看一下是否有正确的指令
 //            一种数据类型的命令放在一个 String String 的hashmap中
@@ -231,20 +231,13 @@ public class DataBaseServer {
 
             if (command == null) {
                 String originalMessage = "'" + commands[0] + "' " + "不是数据库命令";
-                String wrappedMessage;
-                try {
-                    wrappedMessage = encode(originalMessage);
-                    readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-                } catch (Exception e) {
-                    logger.error("sending message error");
-                    org.tinylog.Logger.error("通讯发生错误");
-                }
+                WriteToClient(originalMessage,readyChannel);
 
             } else if (command != null) {
 //                进入此if分支语句则表示 有存在输入的命令
 
                 org.tinylog.Logger.info("命令输入正确");
-                logger.warn("input correct");
+                logger.info("input correct");
 
                 int length = commands.length;
                 String[] parameterValues = new String[length - 1];
@@ -261,31 +254,13 @@ public class DataBaseServer {
                 } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    String originalMessage = "调用方法形参出现错误";
-                    String wrappedMessage;
-                    try {
-                        wrappedMessage = encode(originalMessage);
-                        readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-                    } catch (Exception e1) {
-                        logger.error("sending message error");
-                        org.tinylog.Logger.error("通讯发生错误");
-                    }
+                    WriteToClient("调用方法形参出现错误",readyChannel);
                 }
             }
             if (!execute) {
-                String originalMessage = "参数输入错误 请重新输入";
-                String wrappedMessage;
-                try {
-                    wrappedMessage = encode(originalMessage);
-                    readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-                } catch (Exception e) {
-                    logger.error("sending message error");
-                    org.tinylog.Logger.error("通讯发生错误");
-                }
-
+                WriteToClient("参数输入错误 请重新输入", readyChannel);
                 logger.info("execute failed");
                 org.tinylog.Logger.info("方法执行失败");
-                org.tinylog.Logger.info("参数输入错误");
             } else {
                 logger.info("execute success");
                 org.tinylog.Logger.info("方法执行成功");
@@ -314,10 +289,12 @@ public class DataBaseServer {
         for (Method method : methods) {
             if (method.getName().equals(command)) {
                 Class<?>[] parameterTypes = method.getParameterTypes();
-                if (method.getParameterCount() != parameterValues.length)
-                    return false;
-                method.setAccessible(true);
 
+                if (method.getParameterCount() != parameterValues.length)
+                    continue;
+//                这里绕了一个弯 绕开了bug 但是应该新创建类来解决的
+
+                method.setAccessible(true);
                 Object feedback;
                 if (parameterTypes.length == 0)
                     feedback = method.invoke(command);
@@ -326,24 +303,9 @@ public class DataBaseServer {
 
 //                若有返回值就将返回值传回客户端 没返回值就返回1
                 if (feedback == null) {
-                    String originalMessage = "1";
-                    String wrappedMessage;
-                    try {
-                        wrappedMessage = encode(originalMessage);
-                        readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-                    } catch (Exception e1) {
-                        logger.error("sending message error");
-                        org.tinylog.Logger.error("通讯发生错误");
-                    }
+                    WriteToClient("1", readyChannel);
                 } else {
-                    String wrappedMessage;
-                    try {
-                        wrappedMessage = encode(String.valueOf(feedback));
-                        readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
-                    } catch (Exception e) {
-                        logger.error("sending message error");
-                        org.tinylog.Logger.error("通讯发生错误");
-                    }
+                    WriteToClient(String.valueOf(feedback), readyChannel);
                 }
                 return true;
             }
@@ -351,4 +313,14 @@ public class DataBaseServer {
         return false;
     }
 
+    private static void WriteToClient(String originalMessage, SocketChannel readyChannel) {
+        try {
+            String wrappedMessage;
+            wrappedMessage = encode(originalMessage);
+            readyChannel.write(Charset.forName("UTF-8").encode(wrappedMessage));
+        } catch (Exception e) {
+            logger.error("sending message error");
+            org.tinylog.Logger.error("通讯发生错误");
+        }
+    }
 }

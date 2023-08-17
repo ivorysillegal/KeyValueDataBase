@@ -66,7 +66,7 @@ public class DataBaseClient {
         while (scanner.hasNextLine()) {
             String msg = scanner.nextLine();
             if (msg.equals("exit")) {
-                org.tinylog.Logger.warn("未启动服务器 请启动服务器后重试");
+                org.tinylog.Logger.warn("客户端正在关闭 即将保存数据");
                 try {
                     selector.close();
                     socketChannel.close();
