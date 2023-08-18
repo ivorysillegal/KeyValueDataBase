@@ -340,6 +340,7 @@ public class DataBaseServer {
                     break;
                 }
             }
+            bgsave();
             System.exit(111);
         } catch (IOException e) {
             e.printStackTrace();
