@@ -4,7 +4,9 @@ import command.IOCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +39,7 @@ public class DataBaseServer {
     public static int nThreads;
     //    设置执行程序的和定时任务的线程池大小
     public static final Logger logger = LogManager.getLogger(DataBaseServer.class);
+    private static volatile boolean isRunning = true;
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
@@ -58,6 +61,9 @@ public class DataBaseServer {
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
         logger.debug("executorService register success");
 
+        // 启动一个线程来监听控制台输入
+        Thread consoleThread = new Thread(() -> readConsoleInput());
+        consoleThread.start();
 
         //        程序强制退出或者正常退出时保存数据（利用钩子机制）
         //        注册钩子机制
@@ -86,7 +92,7 @@ public class DataBaseServer {
 //        至此 已经成功启动服务器 下方则是等待客户端的连接
 
 //        空转等待新的连接
-        for (; ; ) {
+        while (isRunning){
 
 //            获取channel数量 (判断当前有没有空闲的channel)
 //            如果没有空闲则空转 继续循环等待连接
@@ -131,7 +137,7 @@ public class DataBaseServer {
             clientChannel.keyFor(selector).cancel(); // 取消在选择器上的注册
             logger.warn("finish cancelling client-key");
         } else {
-//            executorService.submit(() -> {
+            executorService.submit(() -> {
 //            执行具体逻辑
                 try {
                     handleReadData(clientChannel, selector, key);
@@ -139,7 +145,7 @@ public class DataBaseServer {
                     org.tinylog.Logger.error("执行读操作错误");
                     logger.error("read error");
                 }
-//            });
+            });
         }
     }
 
@@ -166,7 +172,7 @@ public class DataBaseServer {
 
     private static void handleClientConnection(SocketChannel clientChannel) throws IOException {
         // 处理来自客户端的新的连接(已连接)-------连接上了之后执行什么的操作
-        WriteToClient("此客户端已连接！",clientChannel);
+        WriteToClient("此客户端已连接！", clientChannel);
     }
 
     private static void handleReadData(SocketChannel readyChannel, Selector selector, SelectionKey selectionKey) throws IOException {
@@ -207,7 +213,7 @@ public class DataBaseServer {
             try {
                 originalMsg = decode(s);
             } catch (Exception e) {
-                WriteToClient("接收命令错误",readyChannel);
+                WriteToClient("接收命令错误", readyChannel);
             }
             logger.info("reading msg");
             String command = null;
@@ -231,7 +237,7 @@ public class DataBaseServer {
 
             if (command == null) {
                 String originalMessage = "'" + commands[0] + "' " + "不是数据库命令";
-                WriteToClient(originalMessage,readyChannel);
+                WriteToClient(originalMessage, readyChannel);
 
             } else if (command != null) {
 //                进入此if分支语句则表示 有存在输入的命令
@@ -254,7 +260,7 @@ public class DataBaseServer {
                 } catch (ClassNotFoundException | InstantiationException | NoSuchMethodException | IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    WriteToClient("调用方法形参出现错误",readyChannel);
+                    WriteToClient("调用方法形参出现错误", readyChannel);
                 }
             }
             if (!execute) {
@@ -323,4 +329,21 @@ public class DataBaseServer {
             org.tinylog.Logger.error("通讯发生错误");
         }
     }
+
+    private static void readConsoleInput() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            while (true) {
+                String input = reader.readLine();
+                if ("exit".equalsIgnoreCase(input)) {
+                    isRunning = false;
+                    break;
+                }
+            }
+            System.exit(111);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
