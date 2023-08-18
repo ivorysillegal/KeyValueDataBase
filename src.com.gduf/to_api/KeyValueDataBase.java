@@ -1,26 +1,26 @@
 package to_api;
 
-import command.HashCommand;
-import command.LinkedListCommand;
-import command.SetCommand;
-import command.StringCommand;
+import methods.ToHash;
+import methods.ToLinkedList;
+import methods.ToSet;
+import methods.ToString;
 
 public class KeyValueDataBase {
 
-    public static StringCommand String() {
-        return new StringCommand();
+    public static ToString String() {
+        return new ToString();
     }
 
-    public static LinkedListCommand LinkedList() {
-        return new LinkedListCommand();
+    public static ToLinkedList LinkedList() {
+        return new ToLinkedList();
     }
 
-    public static HashCommand Hash(){
-        return new HashCommand();
+    public static ToHash Hash(){
+        return new ToHash();
     }
 
-    public static SetCommand Set(){
-        return new SetCommand();
+    public static ToSet Set(){
+        return new ToSet();
     }
 
 }

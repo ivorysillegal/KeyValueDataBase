@@ -4,6 +4,10 @@ import command.HashCommand;
 import command.LinkedListCommand;
 import command.SetCommand;
 import command.StringCommand;
+import methods.ToHash;
+import methods.ToLinkedList;
+import methods.ToSet;
+import methods.ToString;
 import to_api.KeyValueDataBase;
 
 import java.util.HashMap;
@@ -17,7 +21,7 @@ public class TestApi {
         String value = "2";
 
         HashMap<String, String> hashMap = new HashMap<>();
-        StringCommand string = KeyValueDataBase.String();
+        ToString string = KeyValueDataBase.String();
         string.set(key, value, hashMap);
 
         KeyValueDataBase.String().set(key, value, hashMap);
@@ -26,7 +30,7 @@ public class TestApi {
 
 
         HashMap<String, LinkedList<String>> linkedListHashMap = new HashMap<>();
-        LinkedListCommand linkedList = KeyValueDataBase.LinkedList();
+        ToLinkedList linkedList = KeyValueDataBase.LinkedList();
         linkedList.lpush(key, value, linkedListHashMap);
 
         KeyValueDataBase.LinkedList().rpush(key, value, linkedListHashMap);
@@ -35,9 +39,9 @@ public class TestApi {
 
 
         HashMap<String, HashMap<String, String>> hashMapHashMap = new HashMap<>();
-        HashCommand hashCommand = KeyValueDataBase.Hash();
+        ToHash hashCommand = KeyValueDataBase.Hash();
         String field = "3";
-        hashCommand.hset(key, field, value);
+        hashCommand.hset(key, field, value, hashMapHashMap);
 
         KeyValueDataBase.Hash().hset(key, field, value, hashMapHashMap);
         KeyValueDataBase.Hash().hget(key, field, hashMapHashMap);
@@ -45,13 +49,12 @@ public class TestApi {
 
 
         HashMap<String, HashSet<String>> setHashMap = new HashMap<>();
-        SetCommand setCommand = KeyValueDataBase.Set();
+        ToSet setCommand = KeyValueDataBase.Set();
         setCommand.sadd(key, setHashMap, value);
 
         KeyValueDataBase.Set().sadd(key, setHashMap, value);
         KeyValueDataBase.Set().sismember(key, value, setHashMap);
-        KeyValueDataBase.Set().smembers(key);
-
+        KeyValueDataBase.Set().smembers(key, setHashMap);
 
 
     }
